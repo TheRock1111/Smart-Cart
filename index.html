@@ -10,46 +10,9 @@
 <meta name="theme-color" content="#00387b">
 <title>Carrefour — Smart Cart by GJCK</title>
 <script>
-// ═══ EMBEDDED WEB APP MANIFEST (Data URL) ═══
-const manifest={
-  name:"Smart Cart by GJCK — Carrefour",
-  short_name:"Smart Cart",
-  description:"Changuito inteligente de autocobro para Carrefour",
-  start_url:location.href,
-  display:"standalone",
-  orientation:"landscape",
-  background_color:"#ffffff",
-  theme_color:"#00387b",
-  icons:[{
-    src:"data:image/svg+xml,"+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" rx="80" fill="#00387b"/><text x="256" y="300" text-anchor="middle" font-family="Arial" font-weight="bold" font-size="200" fill="white">SC</text><text x="256" y="400" text-anchor="middle" font-family="Arial" font-weight="bold" font-size="80" fill="#e81a24">GJCK</text></svg>'),
-    sizes:"512x512",
-    type:"image/svg+xml",
-    purpose:"any maskable"
-  }]
-};
-const manifestBlob=new Blob([JSON.stringify(manifest)],{type:'application/json'});
-const manifestURL=URL.createObjectURL(manifestBlob);
-const link=document.createElement('link');
-link.rel='manifest';link.href=manifestURL;
-document.head.appendChild(link);
-
-// ═══ INLINE SERVICE WORKER (required for PWA install prompt) ═══
-if('serviceWorker' in navigator){
-  const swCode=`
-    const CACHE='smartcart-v1';
-    self.addEventListener('install',e=>{self.skipWaiting();});
-    self.addEventListener('activate',e=>{e.waitUntil(clients.claim());});
-    self.addEventListener('fetch',e=>{
-      e.respondWith(fetch(e.request).catch(()=>caches.match(e.request)));
-    });
-  `;
-  const swBlob=new Blob([swCode],{type:'application/javascript'});
-  const swURL=URL.createObjectURL(swBlob);
-  navigator.serviceWorker.register(swURL,{scope:'/'}).catch(()=>{
-    // Blob SW may not work in all contexts; try registering inline
-    // This is a best-effort approach for single-file PWA
-  });
-}
+const manifest={name:"Smart Cart by GJCK — Carrefour",short_name:"Smart Cart",description:"Sistema de autocobro inteligente",start_url:location.href,display:"standalone",orientation:"landscape",background_color:"#ffffff",theme_color:"#00387b",icons:[{src:"data:image/svg+xml,"+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" rx="80" fill="#00387b"/><text x="256" y="300" text-anchor="middle" font-family="Arial" font-weight="bold" font-size="200" fill="white">SC</text><text x="256" y="400" text-anchor="middle" font-family="Arial" font-weight="bold" font-size="80" fill="#e81a24">GJCK</text></svg>'),sizes:"512x512",type:"image/svg+xml",purpose:"any maskable"}]};
+const mb=new Blob([JSON.stringify(manifest)],{type:'application/json'});const mu=URL.createObjectURL(mb);const ml=document.createElement('link');ml.rel='manifest';ml.href=mu;document.head.appendChild(ml);
+if('serviceWorker' in navigator){const sw=`self.addEventListener('install',e=>{self.skipWaiting();});self.addEventListener('activate',e=>{e.waitUntil(clients.claim());});self.addEventListener('fetch',e=>{e.respondWith(fetch(e.request).catch(()=>caches.match(e.request)));});`;const sb=new Blob([sw],{type:'application/javascript'});navigator.serviceWorker.register(URL.createObjectURL(sb),{scope:'/'}).catch(()=>{});}
 </script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
@@ -59,8 +22,7 @@ if('serviceWorker' in navigator){
   --blue-pale:#e8f0fa;--blue-glow:rgba(0,56,123,.15);
   --red:#e81a24;--red-soft:#fff1f2;
   --green:#059669;--green-bg:#ecfdf5;
-  --orange:#f59e0b;--orange-bg:#fffbeb;
-  --gold:#f59e0b;
+  --orange:#f59e0b;--orange-bg:#fffbeb;--gold:#f59e0b;
   --bg:#f4f6f9;--white:#fff;
   --text:#1a1a2e;--text-light:#6b7280;--text-lighter:#9ca3af;
   --border:#e5e7eb;--border-light:#f0f1f3;
@@ -85,24 +47,21 @@ html,body{height:100%;width:100%;overflow:hidden;font-family:'Inter','Segoe UI',
 /* ═══ LOCK SCREEN ═══ */
 .lock-screen{position:fixed;inset:0;z-index:500;background:var(--white);display:flex;align-items:center;justify-content:center;transition:opacity .5s ease,transform .5s ease;}
 .lock-screen.dismissed{opacity:0;transform:scale(1.03);pointer-events:none;}
-.lock-inner{text-align:center;max-width:480px;width:90%;animation:fadeIn .6s ease;}
-.lock-logo{max-width:280px;width:80%;margin:0 auto 28px;display:block;}
-.lock-title{font-size:26px;font-weight:800;color:var(--blue);margin-bottom:10px;}
-.lock-subtitle{font-size:14px;color:var(--text-lighter);margin-bottom:36px;font-weight:500;}
-.lock-buttons{display:flex;flex-direction:column;gap:14px;max-width:360px;margin:0 auto;}
-.btn-lock{padding:18px 24px;border-radius:var(--radius);font-family:inherit;font-size:15px;font-weight:700;cursor:pointer;transition:all var(--transition);display:flex;align-items:center;justify-content:center;gap:10px;}
-.btn-lock-primary{background:linear-gradient(135deg,var(--blue),var(--blue-dark));color:var(--white);border:none;box-shadow:0 4px 18px var(--blue-glow);}
-.btn-lock-primary:hover{transform:translateY(-2px);box-shadow:0 8px 28px var(--blue-glow);}
-.btn-lock-secondary{background:var(--white);color:var(--blue);border:2px solid var(--blue);}
-.btn-lock-secondary:hover{background:var(--blue-pale);transform:translateY(-2px);}
+.lock-inner{text-align:center;max-width:520px;width:92%;animation:fadeIn .6s ease;}
+.lock-logo{max-width:320px;width:85%;margin:0 auto 32px;display:block;}
+.lock-title{font-size:32px;font-weight:900;color:var(--blue);margin-bottom:12px;line-height:1.2;letter-spacing:-.3px;}
+.lock-subtitle{font-size:15px;color:var(--text-lighter);margin-bottom:40px;font-weight:500;}
 .lock-sub{display:none;text-align:center;animation:fadeIn .4s ease;}
 .lock-sub.active{display:block;}
-.lock-sub .sub-icon{margin:0 auto 20px;width:80px;height:80px;border-radius:50%;background:var(--blue-pale);display:flex;align-items:center;justify-content:center;}
-.lock-sub .sub-icon svg{width:36px;height:36px;color:var(--blue);}
+.lock-sub .sub-icon{margin:0 auto 24px;width:90px;height:90px;border-radius:50%;background:var(--blue-pale);display:flex;align-items:center;justify-content:center;}
+.lock-sub .sub-icon svg{width:40px;height:40px;color:var(--blue);}
 .lock-sub .sub-icon.scanning{animation:pulse 1.8s ease-in-out infinite;}
-.lock-sub .sub-text{font-size:17px;font-weight:600;color:var(--text);margin-bottom:8px;}
-.lock-sub .sub-hint{font-size:13px;color:var(--text-lighter);margin-bottom:24px;}
-.btn-back{padding:12px 24px;background:transparent;color:var(--text-light);border:1.5px solid var(--border);border-radius:var(--radius);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;}
+.lock-sub .sub-text{font-size:18px;font-weight:600;color:var(--text);margin-bottom:8px;}
+.lock-sub .sub-hint{font-size:14px;color:var(--text-lighter);margin-bottom:28px;}
+.btn-lock{padding:20px 32px;border-radius:var(--radius);font-family:inherit;font-size:17px;font-weight:700;cursor:pointer;transition:all var(--transition);display:flex;align-items:center;justify-content:center;gap:12px;max-width:400px;margin:0 auto;width:100%;}
+.btn-lock-secondary{background:var(--white);color:var(--blue);border:2.5px solid var(--blue);}
+.btn-lock-secondary:hover{background:var(--blue-pale);transform:translateY(-2px);}
+.btn-back{padding:12px 28px;background:transparent;color:var(--text-light);border:1.5px solid var(--border);border-radius:var(--radius);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;}
 
 /* ═══ MAIN LAYOUT ═══ */
 .app{display:flex;height:100vh;width:100vw;}
@@ -168,9 +127,9 @@ html,body{height:100%;width:100%;overflow:hidden;font-family:'Inter','Segoe UI',
 .offer-card .offer-scan-hint{font-size:10px;font-weight:600;color:var(--blue);background:var(--blue-pale);padding:3px 9px;border-radius:10px;}
 .btn-close-offer{padding:10px 24px;background:var(--white);color:var(--text-light);border:1.5px solid var(--border);border-radius:var(--radius);font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;}
 
-/* FLOATING TOOLBAR */
-.floating-toolbar{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);display:flex;gap:10px;z-index:10;animation:fadeInUp .5s ease .3s both;}
-.tb-btn{display:flex;align-items:center;gap:8px;padding:14px 22px;background:var(--white);border:1.5px solid var(--border);border-radius:28px;font-family:inherit;font-size:13px;font-weight:600;color:var(--text);cursor:pointer;transition:all var(--transition);box-shadow:var(--shadow-md);white-space:nowrap;min-height:52px;}
+/* FLOATING TOOLBAR — centered, uniform spacing */
+.floating-toolbar{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);display:flex;gap:12px;z-index:10;animation:fadeInUp .5s ease .3s both;justify-content:center;}
+.tb-btn{display:flex;align-items:center;gap:8px;padding:14px 24px;background:var(--white);border:1.5px solid var(--border);border-radius:28px;font-family:inherit;font-size:13px;font-weight:600;color:var(--text);cursor:pointer;transition:all var(--transition);box-shadow:var(--shadow-md);white-space:nowrap;min-height:52px;}
 .tb-btn:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg);border-color:var(--blue);}
 .tb-btn svg{width:18px;height:18px;color:var(--blue);flex-shrink:0;}
 .tb-btn.help-btn{background:linear-gradient(135deg,#fbbf24,var(--orange));border-color:transparent;color:#78350f;box-shadow:0 4px 18px rgba(245,158,11,.3);}
@@ -179,32 +138,31 @@ html,body{height:100%;width:100%;overflow:hidden;font-family:'Inter','Segoe UI',
 
 /* SECURITY CAM */
 .security-cam{position:absolute;top:16px;right:16px;display:flex;align-items:center;gap:12px;z-index:10;animation:fadeIn .8s ease .5s both;background:var(--white);padding:8px 16px 8px 8px;border-radius:var(--radius);box-shadow:var(--shadow-lg);border:1px solid var(--border);}
-.cam-video-wrap{width:56px;height:56px;border-radius:10px;overflow:hidden;position:relative;background:#000;flex-shrink:0;box-shadow:inset 0 0 0 1px rgba(255,255,255,.1);}
+.cam-video-wrap{width:56px;height:56px;border-radius:10px;overflow:hidden;position:relative;background:#000;flex-shrink:0;}
 .cam-video-wrap video{width:100%;height:100%;object-fit:cover;transform:scaleX(-1);}
 .cam-info{display:flex;flex-direction:column;gap:3px;}
 .cam-dot-row{display:flex;align-items:center;gap:5px;}
 .cam-dot{width:7px;height:7px;border-radius:50%;background:var(--red);animation:blink 1.2s ease-in-out infinite;box-shadow:0 0 6px var(--red);flex-shrink:0;}
 .cam-rec{font-size:9px;font-weight:800;color:var(--red);letter-spacing:1.2px;}
 .cam-surveillance{font-size:8px;font-weight:600;color:var(--text-lighter);text-transform:uppercase;letter-spacing:.4px;line-height:1.35;max-width:150px;}
-@keyframes camPulse{0%,100%{box-shadow:0 0 0 3px rgba(232,26,36,.4),0 4px 20px rgba(0,0,0,.3)}50%{box-shadow:0 0 0 5px rgba(232,26,36,.25),0 4px 20px rgba(0,0,0,.3)}}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.15}}
 
-/* ═══ MODALS shared ═══ */
+/* ═══ MODALS ═══ */
 .modal-overlay,.review-overlay,.payment-overlay,.fruits-overlay,.map-overlay,.coupons-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;align-items:center;justify-content:center;backdrop-filter:blur(4px);}
 .modal-overlay.active,.review-overlay.active,.payment-overlay.active,.fruits-overlay.active,.map-overlay.active,.coupons-overlay.active{display:flex;}
 .modal-box{background:var(--white);border-radius:var(--radius-lg);padding:36px 44px;text-align:center;box-shadow:var(--shadow-xl);display:flex;flex-direction:column;align-items:center;gap:16px;animation:popIn .35s ease;}
 .spinner{width:40px;height:40px;border:4px solid var(--blue-pale);border-top-color:var(--blue);border-radius:50%;animation:spin 1s linear infinite;}
 .modal-box p{font-size:16px;font-weight:600;color:var(--text);}
 .modal-box .modal-hint{font-size:12px;color:var(--text-lighter);}
-.btn-close-modal{padding:10px 24px;background:var(--white);color:var(--text-light);border:1.5px solid var(--border);border-radius:var(--radius);font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;transition:all var(--transition);}
+.btn-close-modal{padding:10px 24px;background:var(--white);color:var(--text-light);border:1.5px solid var(--border);border-radius:var(--radius);font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;}
 
-/* ═══ REVIEW MODAL ═══ */
+/* REVIEW */
 .review-box{background:var(--white);border-radius:var(--radius-lg);padding:28px 32px;box-shadow:var(--shadow-xl);max-width:640px;width:94%;max-height:85vh;animation:popIn .35s ease;display:flex;flex-direction:column;}
 .review-box h2{font-size:18px;font-weight:800;color:var(--blue);margin-bottom:4px;text-align:center;}
 .review-box .review-hint{font-size:12px;color:var(--text-lighter);margin-bottom:14px;text-align:center;}
 .review-list{flex:1;overflow-y:auto;scrollbar-width:none;max-height:300px;margin-bottom:16px;}
 .review-list::-webkit-scrollbar{display:none;}
-.review-item{display:flex;align-items:center;gap:12px;padding:12px 14px;margin-bottom:8px;background:var(--white);border-radius:var(--radius);border:1.5px solid #d5d8dc;transition:box-shadow var(--transition);}
+.review-item{display:flex;align-items:center;gap:12px;padding:12px 14px;margin-bottom:8px;background:var(--white);border-radius:var(--radius);border:1.5px solid #d5d8dc;}
 .review-item:hover{box-shadow:var(--shadow);}
 .review-item img{width:48px;height:48px;object-fit:contain;border-radius:8px;background:var(--bg);flex-shrink:0;}
 .review-item .ri-info{flex:1;min-width:0;}
@@ -216,12 +174,10 @@ html,body{height:100%;width:100%;overflow:hidden;font-family:'Inter','Segoe UI',
 .review-savings{font-size:13px;font-weight:700;color:var(--red);background:var(--red-soft);padding:6px 14px;border-radius:16px;display:inline-block;margin-bottom:10px;}
 .review-total{font-size:26px;font-weight:900;color:var(--text);margin-bottom:16px;}
 .review-buttons{display:flex;gap:12px;justify-content:center;}
-.btn-keep-shopping{padding:13px 28px;background:var(--white);color:var(--text-light);border:1.5px solid var(--border);border-radius:var(--radius);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:all var(--transition);}
-.btn-keep-shopping:hover{background:#f9fafb;}
-.btn-confirm-pay{padding:13px 28px;background:linear-gradient(135deg,var(--blue),var(--blue-dark));color:var(--white);border:none;border-radius:var(--radius);font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 4px 18px var(--blue-glow);transition:all var(--transition);}
-.btn-confirm-pay:hover{transform:translateY(-1px);}
+.btn-keep-shopping{padding:13px 28px;background:var(--white);color:var(--text-light);border:1.5px solid var(--border);border-radius:var(--radius);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;}
+.btn-confirm-pay{padding:13px 28px;background:linear-gradient(135deg,var(--blue),var(--blue-dark));color:var(--white);border:none;border-radius:var(--radius);font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 4px 18px var(--blue-glow);}
 
-/* ═══ FRUITS QR ═══ */
+/* FRUITS — no QR, scan ticket from scale */
 .fruits-box{background:var(--white);border-radius:var(--radius-lg);padding:36px 40px;box-shadow:var(--shadow-xl);max-width:460px;width:92%;animation:popIn .35s ease;text-align:center;}
 .fruits-box h2{font-size:18px;font-weight:800;color:var(--blue);margin-bottom:8px;}
 .fruits-scan-icon{width:90px;height:90px;margin:16px auto;border-radius:50%;background:var(--green-bg);display:flex;align-items:center;justify-content:center;animation:pulse 2s ease-in-out infinite;}
@@ -229,7 +185,7 @@ html,body{height:100%;width:100%;overflow:hidden;font-family:'Inter','Segoe UI',
 .fruits-box .fruits-hint{font-size:14px;color:var(--text);font-weight:600;margin-bottom:6px;}
 .fruits-box .fruits-sub-hint{font-size:12px;color:var(--text-lighter);margin-bottom:20px;}
 
-/* ═══ MAP ═══ */
+/* MAP */
 .map-box{background:var(--white);border-radius:var(--radius-lg);padding:24px 28px;box-shadow:var(--shadow-xl);max-width:700px;width:94%;animation:popIn .35s ease;text-align:center;}
 .map-box h2{font-size:18px;font-weight:800;color:var(--blue);margin-bottom:4px;}
 .map-box .map-hint{font-size:12px;color:var(--text-lighter);margin-bottom:16px;}
@@ -242,11 +198,11 @@ html,body{height:100%;width:100%;overflow:hidden;font-family:'Inter','Segoe UI',
 .map-legend{display:flex;align-items:center;justify-content:center;gap:16px;margin-top:12px;font-size:10px;color:var(--text-light);font-weight:500;}
 .map-legend .dot-red{width:10px;height:10px;border-radius:50%;background:var(--red);}
 
-/* ═══ COUPONS ═══ */
+/* COUPONS */
 .coupons-box{background:var(--white);border-radius:var(--radius-lg);padding:28px 32px;box-shadow:var(--shadow-xl);max-width:520px;width:92%;animation:popIn .35s ease;text-align:center;}
 .coupons-box h2{font-size:18px;font-weight:800;color:var(--blue);margin-bottom:4px;}
 .coupons-box .coupons-hint{font-size:12px;color:var(--text-lighter);margin-bottom:16px;}
-.coupon-card{display:flex;align-items:center;gap:14px;padding:14px 16px;background:var(--bg);border-radius:var(--radius);margin-bottom:10px;border-left:4px solid var(--red);text-align:left;transition:all var(--transition);}
+.coupon-card{display:flex;align-items:center;gap:14px;padding:14px 16px;background:var(--bg);border-radius:var(--radius);margin-bottom:10px;border-left:4px solid var(--red);text-align:left;}
 .coupon-card:hover{background:var(--red-soft);}
 .coupon-emoji{font-size:28px;}.coupon-info{flex:1;}.coupon-title{font-size:13px;font-weight:700;color:var(--text);}.coupon-desc{font-size:11px;color:var(--text-light);margin-top:2px;}
 .coupon-badge{padding:4px 10px;background:var(--red);color:var(--white);border-radius:12px;font-size:10px;font-weight:700;white-space:nowrap;}
@@ -255,7 +211,7 @@ html,body{height:100%;width:100%;overflow:hidden;font-family:'Inter','Segoe UI',
 .coupons-nosocio .nosocio-title{font-size:16px;font-weight:700;color:var(--text);margin-bottom:8px;}
 .coupons-nosocio .nosocio-desc{font-size:13px;color:var(--text-light);line-height:1.5;}
 
-/* ═══ PAYMENT ═══ */
+/* PAYMENT */
 .payment-box{background:var(--white);border-radius:var(--radius-lg);padding:28px 36px;text-align:center;box-shadow:var(--shadow-xl);display:flex;flex-direction:column;align-items:center;gap:16px;animation:popIn .35s ease;max-width:520px;width:92%;}
 .payment-box h2{font-size:18px;font-weight:800;color:var(--blue);}
 .payment-box .payment-total{font-size:28px;font-weight:900;color:var(--text);margin-top:-4px;}
@@ -266,8 +222,8 @@ html,body{height:100%;width:100%;overflow:hidden;font-family:'Inter','Segoe UI',
 .payment-option svg{width:28px;height:28px;color:var(--blue);}
 .payment-option .pay-label{font-size:11px;font-weight:600;color:var(--text);}
 .btn-cancel-pay{padding:10px 24px;background:var(--white);color:var(--text-light);border:1.5px solid var(--border);border-radius:var(--radius);font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;margin-top:4px;}
-.payment-processing,.payment-success{display:none;flex-direction:column;align-items:center;gap:14px;}
-.payment-processing.active,.payment-success.active{display:flex;}
+.payment-processing,.payment-success,.payment-thankyou{display:none;flex-direction:column;align-items:center;gap:14px;}
+.payment-processing.active,.payment-success.active,.payment-thankyou.active{display:flex;}
 .payment-processing p{font-size:16px;font-weight:600;color:var(--text);}
 .payment-success .check-circle{width:60px;height:60px;border-radius:50%;background:var(--green-bg);display:flex;align-items:center;justify-content:center;}
 .payment-success .check-circle svg{color:var(--green);width:30px;height:30px;}
@@ -275,18 +231,19 @@ html,body{height:100%;width:100%;overflow:hidden;font-family:'Inter','Segoe UI',
 .success-savings{font-size:13px;font-weight:700;color:var(--red);background:var(--red-soft);padding:5px 14px;border-radius:16px;}
 .payment-success .success-total{font-size:26px;font-weight:900;color:var(--blue);}
 .payment-success p{font-size:13px;color:var(--text-light);}
-
-/* Stars rating */
 .stars-section{margin-top:8px;text-align:center;}
 .stars-title{font-size:13px;font-weight:600;color:var(--text-light);margin-bottom:10px;}
 .stars-row{display:flex;justify-content:center;gap:4px;}
-.star-btn{background:none;border:none;cursor:pointer;font-size:40px;color:#d1d5db;transition:color .15s,transform .15s;padding:2px;-webkit-text-stroke:1.5px #9ca3af;text-stroke:1.5px #9ca3af;}
+.star-btn{background:none;border:none;cursor:pointer;font-size:40px;color:#d1d5db;transition:color .15s,transform .15s;padding:2px;-webkit-text-stroke:1.5px #9ca3af;}
 .star-btn:hover{transform:scale(1.15);}
-.star-btn.active{color:var(--gold);-webkit-text-stroke:1.5px #d97706;text-stroke:1.5px #d97706;}
+.star-btn.active{color:var(--gold);-webkit-text-stroke:1.5px #d97706;}
 .stars-row.locked .star-btn{cursor:default;pointer-events:none;}
 .stars-thanks{font-size:12px;font-weight:600;color:var(--green);margin-top:10px;display:none;}
 .stars-thanks.visible{display:block;}
-.btn-close-success{margin-top:6px;padding:12px 32px;background:linear-gradient(135deg,var(--blue),var(--blue-dark));color:var(--white);border:none;border-radius:var(--radius);font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 4px 18px var(--blue-glow);}
+/* Thank you final screen */
+.payment-thankyou .ty-emoji{font-size:56px;margin-bottom:8px;}
+.payment-thankyou h3{font-size:22px;font-weight:800;color:var(--blue);}
+.payment-thankyou p{font-size:14px;color:var(--text-lighter);}
 
 /* TOAST */
 .toast-container{position:fixed;top:16px;right:16px;z-index:600;display:flex;flex-direction:column;gap:8px;max-width:400px;}
@@ -309,11 +266,24 @@ html,body{height:100%;width:100%;overflow:hidden;font-family:'Inter','Segoe UI',
 <body>
 <input type="text" id="scannerInput" autocomplete="off" autofocus>
 <div class="weight-lockdown" id="weightLockdown"><div class="lockdown-box"><div class="lockdown-icon">⚠️</div><h2>DISCREPANCIA DE PESO DETECTADA</h2><p>Por favor, reubique el último producto en el changuito o aguarde a un asistente.</p><div class="lockdown-weights"><div class="lw"><div class="lw-label">Peso esperado</div><div class="lw-val" id="lwExpected">0 g</div></div><div class="lw"><div class="lw-label">Peso detectado</div><div class="lw-val red" id="lwDetected">0 g</div></div></div><button class="btn-fix-weight" onclick="resolveWeight()">✓ Producto reubicado</button></div></div>
+
+<!-- LOCK SCREEN — DNI only -->
 <div class="lock-screen" id="lockScreen">
-  <div class="lock-inner lock-sub active" id="lockMain"><img class="lock-logo" src="https://raw.githubusercontent.com/TheRock1111/Smart-Cart/main/logo_carrefour.jpg.jpg" alt="Carrefour"><div class="lock-title">Bienvenido al Autocobro Inteligente</div><div class="lock-subtitle">Por favor, identificate para desbloquear tu changuito</div><div class="lock-buttons"><button class="btn-lock btn-lock-primary" onclick="showLockSub('app')">📱 Ingresar con App Carrefour</button><button class="btn-lock btn-lock-secondary" onclick="showLockSub('dni')">🪪 Escanear mi DNI</button></div></div>
-  <div class="lock-inner lock-sub" id="lockApp"><div class="sub-icon scanning"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7V1h20v6"/><path d="M2 17v6h20v-6"/><line x1="7" y1="12" x2="7.01" y2="12"/><line x1="12" y1="12" x2="12.01" y2="12"/><line x1="17" y1="12" x2="17.01" y2="12"/></svg></div><div class="sub-text">Acercá el código de tu App Mi Carrefour al escáner</div><div class="sub-hint">Abrí la app y mostrá tu código de socio</div><button class="btn-back" onclick="showLockSub('main')">← Volver</button></div>
-  <div class="lock-inner lock-sub" id="lockDni"><div class="sub-icon scanning"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="7" y1="9" x2="17" y2="9"/><line x1="7" y1="13" x2="13" y2="13"/><circle cx="15.5" cy="15" r="1.5"/></svg></div><div class="sub-text">Escaneá el código de barras del frente de tu DNI</div><div class="sub-hint">Pasá tu DNI por el escáner inferior del changuito</div><button class="btn-back" onclick="showLockSub('main')">← Volver</button></div>
+  <div class="lock-inner lock-sub active" id="lockMain">
+    <img class="lock-logo" src="https://raw.githubusercontent.com/TheRock1111/Smart-Cart/main/logo_carrefour.jpg.jpg" alt="Carrefour">
+    <div class="lock-title">Bienvenido/a a Smart Cart</div>
+    <div class="lock-subtitle">Escaneá tu DNI para comenzar tu compra</div>
+    <button class="btn-lock btn-lock-secondary" onclick="showLockSub('dni')">🪪 Escanear mi DNI</button>
+  </div>
+  <div class="lock-inner lock-sub" id="lockDni">
+    <div class="sub-icon scanning"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="7" y1="9" x2="17" y2="9"/><line x1="7" y1="13" x2="13" y2="13"/><circle cx="15.5" cy="15" r="1.5"/></svg></div>
+    <div class="sub-text">Escaneá el código de barras del frente de tu DNI</div>
+    <div class="sub-hint">Pasá tu DNI por el escáner inferior del changuito</div>
+    <button class="btn-back" onclick="showLockSub('main')">← Volver</button>
+  </div>
 </div>
+
+<!-- MAIN APP -->
 <div class="app">
   <div class="panel-left">
     <div class="panel-header"><div class="header-inner"><div class="logo-wrap"><img src="https://raw.githubusercontent.com/TheRock1111/Smart-Cart/main/logo_carrefour.jpg.jpg" alt="Carrefour"></div><div class="subtitle">Smart Cart by GJCK</div></div></div>
@@ -329,18 +299,15 @@ html,body{height:100%;width:100%;overflow:hidden;font-family:'Inter','Segoe UI',
   </div>
 </div>
 <div class="modal-overlay" id="modalRemove"><div class="modal-box"><div class="spinner"></div><p>Retirá el producto del changuito...</p><span class="modal-hint">Confirmando retiro</span></div></div>
-<!-- REVIEW modal (pre-audit + review) -->
-<div class="review-overlay" id="modalReview"><div class="review-box" id="reviewBox">
-  <div id="reviewAudit" style="text-align:center;padding:30px 0;"><div class="spinner" style="margin:0 auto 16px;"></div><p style="font-size:15px;font-weight:600;color:var(--text);">Sincronizando balanza y verificando productos...</p><span style="font-size:11px;color:var(--text-lighter);">Esto solo toma unos segundos</span></div>
-  <div id="reviewContent" style="display:none;"><h2>🛒 Resumen de tu Compra</h2><div class="review-hint" id="reviewCount"></div><div class="review-list" id="reviewList"></div><div class="review-footer"><div class="review-savings" id="reviewSavings" style="display:none;"></div><div class="review-total" id="reviewTotal"></div><div class="review-buttons"><button class="btn-keep-shopping" onclick="closeReview()">Seguir Comprando</button><button class="btn-confirm-pay" onclick="confirmAndPay()">Confirmar y Pagar</button></div></div></div>
-</div></div>
-<div class="fruits-overlay" id="modalFruits"><div class="fruits-box"><h2>🍎 Frutas y Verduras</h2><div class="fruits-scan-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 7h.01"/><path d="M7 12h10"/><path d="M7 17h.01"/></svg></div><div class="fruits-hint">Escaneá el código QR del ticket de tu balanza</div><div class="fruits-sub-hint">Pesá tu producto en la balanza del sector y escaneá el ticket</div><button class="btn-close-modal" onclick="closeFruits()">Cerrar</button></div></div>
+<div class="review-overlay" id="modalReview"><div class="review-box" id="reviewBox"><div id="reviewAudit" style="text-align:center;padding:30px 0;"><div class="spinner" style="margin:0 auto 16px;"></div><p style="font-size:15px;font-weight:600;color:var(--text);">Sincronizando balanza y verificando productos...</p><span style="font-size:11px;color:var(--text-lighter);">Esto solo toma unos segundos</span></div><div id="reviewContent" style="display:none;"><h2>🛒 Resumen de tu Compra</h2><div class="review-hint" id="reviewCount"></div><div class="review-list" id="reviewList"></div><div class="review-footer"><div class="review-savings" id="reviewSavings" style="display:none;"></div><div class="review-total" id="reviewTotal"></div><div class="review-buttons"><button class="btn-keep-shopping" onclick="closeReview()">Seguir Comprando</button><button class="btn-confirm-pay" onclick="confirmAndPay()">Confirmar y Pagar</button></div></div></div></div></div>
+<div class="fruits-overlay" id="modalFruits"><div class="fruits-box"><h2>🍎 Frutas y Verduras</h2><div class="fruits-scan-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 7h.01"/><path d="M7 12h10"/><path d="M7 17h.01"/></svg></div><div class="fruits-hint">Escaneá el ticket de la balanza del sector</div><div class="fruits-sub-hint">Pesá tu producto en la balanza y escaneá el ticket generado</div><button class="btn-close-modal" onclick="closeFruits()">Cerrar</button></div></div>
 <div class="map-overlay" id="modalMap"><div class="map-box"><h2>📍 Mapa de Tienda</h2><div class="map-hint">Tu ubicación en tiempo real</div><div class="store-map"><div class="aisle" style="left:5%;top:10%;width:25%;height:14%;">Panadería</div><div class="aisle" style="left:5%;top:30%;width:25%;height:14%;">Lácteos</div><div class="aisle" style="left:5%;top:50%;width:25%;height:14%;">Carnes</div><div class="aisle" style="left:5%;top:70%;width:25%;height:14%;">Frutas</div><div class="aisle" style="left:38%;top:10%;width:12%;height:54%;">Góndola 1</div><div class="aisle" style="left:55%;top:10%;width:12%;height:54%;">Góndola 2</div><div class="aisle" style="left:72%;top:10%;width:12%;height:54%;">Góndola 3</div><div class="aisle" style="left:38%;top:72%;width:46%;height:14%;">Bebidas</div><div class="section-label" style="right:5%;top:4%;">ENTRADA</div><div class="section-label" style="right:5%;bottom:4%;">CAJAS</div><div class="map-dot" id="mapDot" style="left:88%;top:8%;"></div></div><div class="map-legend"><div class="dot-red"></div> Tu ubicación</div><button class="btn-close-modal" onclick="closeMap()">Cerrar</button></div></div>
 <div class="coupons-overlay" id="modalCoupons"><div class="coupons-box"><h2>🏷️ Mis Cupones Mi Carrefour</h2><div class="coupons-hint" id="couponsHint"></div><div id="couponsContent"></div><button class="btn-close-modal" onclick="closeCoupons()">Cerrar</button></div></div>
 <div class="payment-overlay" id="modalPayment"><div class="payment-box">
-  <div id="payStep1"><h2>Seleccioná tu medio de pago</h2><div class="payment-total" id="paymentTotal">$0</div><div class="payment-grid"><div class="payment-option" onclick="selectPayment(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg><span class="pay-label">Débito</span></div><div class="payment-option" onclick="selectPayment(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/><line x1="7" y1="15" x2="13" y2="15"/></svg><span class="pay-label">Crédito</span></div><div class="payment-option" onclick="selectPayment(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg><span class="pay-label">MODO</span></div><div class="payment-option" onclick="selectPayment(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="2" width="14" height="20" rx="2"/><circle cx="12" cy="11" r="3"/></svg><span class="pay-label">Mercado Pago</span></div><div class="payment-option" onclick="selectPayment(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="8" height="8" rx="1"/><rect x="14" y="2" width="8" height="8" rx="1"/><rect x="2" y="14" width="8" height="8" rx="1"/><rect x="14" y="14" width="4" height="4"/></svg><span class="pay-label">QR</span></div><div class="payment-option" onclick="selectPayment(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="1" y="4" width="22" height="16" rx="2"/><circle cx="12" cy="12" r="3"/></svg><span class="pay-label">Efectivo</span></div></div><button class="btn-cancel-pay" onclick="closePayment()">Cancelar</button></div>
+  <div id="payStep1"><h2>Seleccioná tu medio de pago</h2><div class="payment-total" id="paymentTotal">$0</div><div class="payment-grid"><div class="payment-option" onclick="selectPayment(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg><span class="pay-label">Débito</span></div><div class="payment-option" onclick="selectPayment(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/><line x1="7" y1="15" x2="13" y2="15"/></svg><span class="pay-label">Crédito</span></div><div class="payment-option" onclick="selectPayment(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg><span class="pay-label">MODO</span></div><div class="payment-option" onclick="selectPayment(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="2" width="14" height="20" rx="2"/><circle cx="12" cy="11" r="3"/></svg><span class="pay-label">Mercado Pago</span></div><div class="payment-option" onclick="selectPayment(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="8" height="8" rx="1"/><rect x="14" y="2" width="8" height="8" rx="1"/><rect x="2" y="14" width="8" height="8" rx="1"/><rect x="14" y="14" width="4" height="4"/></svg><span class="pay-label">Pago QR</span></div><div class="payment-option" onclick="selectPayment(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="1" y="4" width="22" height="16" rx="2"/><circle cx="12" cy="12" r="3"/></svg><span class="pay-label">Efectivo</span></div></div><button class="btn-cancel-pay" onclick="closePayment()">Cancelar</button></div>
   <div class="payment-processing" id="payStep2"><div class="spinner"></div><p>Procesando pago...</p></div>
-  <div class="payment-success" id="payStep3"><div class="check-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div><h3>¡Pago confirmado!</h3><p>Gracias por tu compra</p><div class="success-savings" id="successSavings" style="display:none"></div><div class="success-total" id="successTotal">$0</div><div class="stars-section"><div class="stars-title">¿Cómo fue tu experiencia con Smart Cart?</div><div class="stars-row" id="starsRow"></div><div class="stars-thanks" id="starsThanks">¡Gracias por tu opinión! Nos ayuda a mejorar.</div></div><button class="btn-close-success" onclick="closeSuccess()">Cerrar</button></div>
+  <div class="payment-success" id="payStep3"><div class="check-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div><h3>¡Pago confirmado!</h3><p>Gracias por tu compra</p><div class="success-savings" id="successSavings" style="display:none"></div><div class="success-total" id="successTotal">$0</div><div class="stars-section"><div class="stars-title">¿Cómo fue tu experiencia con Smart Cart?</div><div class="stars-row" id="starsRow"></div><div class="stars-thanks" id="starsThanks">¡Gracias por tu opinión!</div></div></div>
+  <div class="payment-thankyou" id="payStep4"><div class="ty-emoji">🎉</div><h3>¡Muchas gracias por su compra!</h3><p>El sistema se reiniciará en unos segundos...</p></div>
 </div></div>
 <div class="sound-hint" id="soundHint"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>Tocá la pantalla para activar el sonido</div>
 <div class="toast-container" id="toastContainer"></div>
@@ -358,6 +325,19 @@ const PRODUCTS={
 let cart={},fruitCart={},scanTimeout=null,isLocked=true,lockSub='main',isSocio=false,weightLocked=false,fruitsModalOpen=false,mapInterval=null;
 const $=id=>document.getElementById(id);
 
+// ═══ FULL RESET ═══
+function fullReset(){
+  cart={};fruitCart={};isLocked=true;lockSub='main';isSocio=false;weightLocked=false;
+  renderCart();showState(stateIdle);
+  // Reset lock screen
+  lockScreen.style.display='';lockScreen.classList.remove('dismissed');
+  showLockSub('main');
+  // Close any open modals
+  document.querySelectorAll('[class*="overlay"]').forEach(el=>el.classList.remove('active'));
+  $('weightLockdown').classList.remove('active');
+  keepFocus();
+}
+
 // ═══ WEIGHT ═══
 function getTheoWeight(){let w=Object.entries(cart).reduce((s,[c,q])=>s+(PRODUCTS[c].weight*q),0);Object.values(fruitCart).forEach(f=>w+=f.weight);return w;}
 function simRealWeight(t){if(Math.random()<.1&&t>0)return t+Math.floor(Math.random()*200)+80;return t+Math.floor(Math.random()*30)-15;}
@@ -372,7 +352,7 @@ function playScanBeep(){if(!audioCtx||!audioReady)return;try{if(audioCtx.state==
 function playOfferBeep(){if(!audioCtx||!audioReady)return;try{if(audioCtx.state==='suspended')audioCtx.resume();const t=audioCtx.currentTime;[880,1100,1320].forEach((f,i)=>{const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.connect(g);g.connect(audioCtx.destination);o.type='sine';o.frequency.setValueAtTime(f,t+i*.09);g.gain.setValueAtTime(.13,t+i*.09);g.gain.exponentialRampToValueAtTime(.001,t+i*.09+.12);o.start(t+i*.09);o.stop(t+i*.09+.12);});}catch(e){}}
 function playSuccessChime(){if(!audioCtx||!audioReady)return;try{if(audioCtx.state==='suspended')audioCtx.resume();const t=audioCtx.currentTime;[{f:783.99,s:0,d:.18,v:.14,tp:'sine'},{f:1046.50,s:.15,d:.35,v:.13,tp:'sine'},{f:783.99,s:0,d:.18,v:.06,tp:'triangle'},{f:1046.50,s:.15,d:.35,v:.05,tp:'triangle'}].forEach(n=>{const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.connect(g);g.connect(audioCtx.destination);o.type=n.tp;o.frequency.setValueAtTime(n.f,t+n.s);g.gain.setValueAtTime(0,t+n.s);g.gain.linearRampToValueAtTime(n.v,t+n.s+.02);g.gain.exponentialRampToValueAtTime(.001,t+n.s+n.d);o.start(t+n.s);o.stop(t+n.s+n.d+.05);});}catch(e){}}
 
-// ═══ DOM REFS ═══
+// ═══ DOM ═══
 const scannerInput=$('scannerInput'),cartItemsEl=$('cartItems'),cartEmptyEl=$('cartEmpty');
 const totalValueEl=$('totalValue'),itemsCountEl=$('itemsCount'),savingsRow=$('savingsRow'),savingsValue=$('savingsValue');
 const stateIdle=$('stateIdle'),stateScan=$('stateScan'),stateOffer=$('stateOffer');
@@ -392,12 +372,14 @@ function getTotalPrice(){let t=Object.entries(cart).reduce((s,[c,q])=>s+(PRODUCT
 function getTotalSavings(){return Object.entries(cart).reduce((s,[c,q])=>{const p=PRODUCTS[c];return s+(p.promo&&p.originalPrice?(p.originalPrice-p.price)*q:0);},0);}
 function updateTotals(){totalValueEl.textContent=fmtPrice(getTotalPrice());const c=getTotalItems();itemsCountEl.textContent=c===1?'1 producto':c+' productos';const sav=getTotalSavings();if(sav>0){savingsRow.classList.add('visible');savingsValue.textContent=fmtPrice(sav);}else savingsRow.classList.remove('visible');}
 
-// ═══ LOCK ═══
-function showLockSub(sub){lockSub=sub;['lockMain','lockApp','lockDni'].forEach(id=>$(id).classList.remove('active'));$({main:'lockMain',app:'lockApp',dni:'lockDni'}[sub]).classList.add('active');}
-function unlock(msg,socio){isLocked=false;isSocio=!!socio;lockScreen.classList.add('dismissed');setTimeout(()=>lockScreen.style.display='none',600);playScanBeep();showToast(msg,'',true);initCamera();}
+// ═══ LOCK (DNI only) ═══
+function showLockSub(sub){lockSub=sub;['lockMain','lockDni'].forEach(id=>$(id).classList.remove('active'));$({main:'lockMain',dni:'lockDni'}[sub]).classList.add('active');}
+function unlock(msg){isLocked=false;isSocio=false;lockScreen.classList.add('dismissed');setTimeout(()=>lockScreen.style.display='none',600);playScanBeep();showToast(msg,'',true);initCamera();}
 function handleLoginScan(code){
-  if(lockSub==='app'&&code==='888'){unlock('⭐ Identidad validada. ¡Hola Socio Mi Carrefour! Tu compra segura ha comenzado.',true);return true;}
-  if(lockSub==='dni'){if(code==='999M'){unlock('👤 Identidad validada. Bienvenido, Gabriel. Tu compra segura está siendo monitoreada.',false);return true;}if(code==='999F'){unlock('👤 Identidad validada. Bienvenida, Sofía. Tu compra segura está siendo monitoreada.',false);return true;}}return false;
+  if(lockSub==='dni'){
+    if(code==='999M'){unlock('👤 Identidad validada. Bienvenido, Gabriel. Tu compra segura está siendo monitoreada.');return true;}
+    if(code==='999F'){unlock('👤 Identidad validada. Bienvenida, Sofía. Tu compra segura está siendo monitoreada.');return true;}
+  }return false;
 }
 function initCamera(){try{navigator.mediaDevices.getUserMedia({video:{facingMode:'user',width:120,height:120}}).then(s=>{$('camVideo').srcObject=s;}).catch(()=>{});}catch(e){}}
 
@@ -411,10 +393,10 @@ function renderCart(){
 function addProduct(code){if(weightLocked)return;const p=PRODUCTS[code];if(!p)return;cart[code]=(cart[code]||0)+1;renderCart();playScanBeep();if(scanTimeout)clearTimeout(scanTimeout);scanImg.src=p.img;scanName.textContent=p.name;scanPrice.textContent=fmtPrice(p.price);if(p.promo){scanBadge.className='scan-badge promo';scanBadge.textContent='🏷️ ¡Descuento aplicado!';}else{scanBadge.className='scan-badge';scanBadge.textContent='✓ Agregado al changuito';}showState(stateScan);scanTimeout=setTimeout(()=>showState(stateIdle),4000);setTimeout(checkWeight,1500);}
 function removeItem(code,type){modalRemove.classList.add('active');setTimeout(()=>{if(type==='fruit'){delete fruitCart[code];}else{if(cart[code]>1)cart[code]--;else delete cart[code];}renderCart();modalRemove.classList.remove('active');showToast('✓ Producto retirado');keepFocus();},2000);}
 
-// ═══ FRUITS ═══
+// ═══ FRUITS (ticket scan) ═══
 function openFruits(){fruitsModalOpen=true;$('modalFruits').classList.add('active');}
 function closeFruits(){fruitsModalOpen=false;$('modalFruits').classList.remove('active');keepFocus();}
-function handleFruitQR(){const names=['Banana','Manzana Roja','Tomate','Naranja','Papa','Cebolla'];const name=names[Math.floor(Math.random()*names.length)];const weight=Math.floor(Math.random()*1500)+200;const priceKg=Math.floor(Math.random()*2000)+800;const total=Math.round(priceKg*weight/1000);fruitCart['fq_'+Date.now()]={name:name+' ('+weight+'g)',total,qty:1,weight};renderCart();playScanBeep();closeFruits();showToast(`✓ ${name} — ${weight}g — ${fmtPrice(total)}`);}
+function handleFruitScan(){const names=['Banana','Manzana Roja','Tomate','Naranja','Papa','Cebolla'];const name=names[Math.floor(Math.random()*names.length)];const weight=Math.floor(Math.random()*1500)+200;const priceKg=Math.floor(Math.random()*2000)+800;const total=Math.round(priceKg*weight/1000);fruitCart['fq_'+Date.now()]={name:name+' ('+weight+'g)',total,qty:1,weight};renderCart();playScanBeep();closeFruits();showToast(`✓ ${name} — ${weight}g — ${fmtPrice(total)}`);}
 
 // ═══ MAP ═══
 const mapPath=[{l:88,t:8},{l:72,t:15},{l:55,t:25},{l:38,t:35},{l:30,t:50},{l:15,t:55},{l:10,t:72},{l:30,t:78},{l:55,t:75},{l:72,t:60},{l:85,t:45},{l:88,t:25}];
@@ -423,11 +405,12 @@ function openMap(){$('modalMap').classList.add('active');mapStep=0;moveMapDot();
 function moveMapDot(){const p=mapPath[mapStep%mapPath.length];$('mapDot').style.left=p.l+'%';$('mapDot').style.top=p.t+'%';mapStep++;}
 function closeMap(){$('modalMap').classList.remove('active');clearInterval(mapInterval);keepFocus();}
 
-// ═══ COUPONS (segmented) ═══
+// ═══ COUPONS ═══
 function openCoupons(){
   const cont=$('couponsContent');
-  if(isSocio){$('couponsHint').textContent='¡Hola Socio! Tenés descuentos exclusivos activos';cont.innerHTML='<div class="coupon-card"><div class="coupon-emoji">🍪</div><div class="coupon-info"><div class="coupon-title">2x1 en Galletitas Terrabusi</div><div class="coupon-desc">Llevá 2 y pagá 1.</div></div><div class="coupon-badge">2x1</div></div><div class="coupon-card"><div class="coupon-emoji">🧴</div><div class="coupon-info"><div class="coupon-title">30% OFF en Limpieza</div><div class="coupon-desc">Skip, Ala, Cif y Vim.</div></div><div class="coupon-badge">-30%</div></div><div class="coupon-card"><div class="coupon-emoji">🥩</div><div class="coupon-info"><div class="coupon-title">15% OFF en Carnicería</div><div class="coupon-desc">Todos los cortes vacunos.</div></div><div class="coupon-badge">-15%</div></div><div class="coupon-card"><div class="coupon-emoji">🍷</div><div class="coupon-info"><div class="coupon-title">20% OFF 2da unidad Vinos</div><div class="coupon-desc">Vinos seleccionados.</div></div><div class="coupon-badge">-20%</div></div>';}
-  else{$('couponsHint').textContent='';cont.innerHTML='<div class="coupons-nosocio"><div class="nosocio-emoji">🔒</div><div class="nosocio-title">¡Ups! Estos beneficios son exclusivos para socios Mi Carrefour</div><div class="nosocio-desc">Registrate en la App para empezar a ahorrar hoy mismo. Descargá Mi Carrefour y accedé a cupones, descuentos y promociones exclusivas.</div></div>';}
+  // DNI users see conversion message
+  $('couponsHint').textContent='';
+  cont.innerHTML='<div class="coupons-nosocio"><div class="nosocio-emoji">🔒</div><div class="nosocio-title">¡Ups! Estos beneficios son exclusivos para socios Mi Carrefour</div><div class="nosocio-desc">Registrate en la App para empezar a ahorrar hoy mismo. Descargá Mi Carrefour y accedé a cupones, descuentos y promociones exclusivas.</div></div>';
   $('modalCoupons').classList.add('active');
 }
 function closeCoupons(){$('modalCoupons').classList.remove('active');keepFocus();}
@@ -439,10 +422,10 @@ function callAssistance(){showToast('🔔 Asistente notificado. Un colaborador s
 window.addEventListener('keydown',e=>{if(e.key==='o'||e.key==='O'){e.preventDefault();e.stopImmediatePropagation();scannerInput.value='';if(!isLocked&&!weightLocked){playOfferBeep();showState(stateOffer);if(scanTimeout)clearTimeout(scanTimeout);}}},true);
 
 // ═══ SCANNER ═══
-scannerInput.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();const code=scannerInput.value.trim();scannerInput.value='';if(!code)return;if(isLocked){handleLoginScan(code);return;}if(weightLocked)return;if(code==='QRFRUTA'&&fruitsModalOpen){handleFruitQR();return;}if(PRODUCTS[code])addProduct(code);}});
+scannerInput.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();const code=scannerInput.value.trim();scannerInput.value='';if(!code)return;if(isLocked){handleLoginScan(code);return;}if(weightLocked)return;if(code==='QRFRUTA'&&fruitsModalOpen){handleFruitScan();return;}if(PRODUCTS[code])addProduct(code);}});
 $('btnCloseOffer').addEventListener('click',()=>{showState(stateIdle);keepFocus();});
 
-// ═══ REVIEW (pre-payment) ═══
+// ═══ REVIEW ═══
 $('btnCheckout').addEventListener('click',()=>{if(!getTotalItems()||weightLocked)return;$('reviewAudit').style.display='';$('reviewContent').style.display='none';$('modalReview').classList.add('active');setTimeout(()=>{buildReview();$('reviewAudit').style.display='none';$('reviewContent').style.display='';},2000);});
 function buildReview(){
   const entries=getAllEntries();const list=$('reviewList');list.innerHTML='';
@@ -454,47 +437,42 @@ function closeReview(){$('modalReview').classList.remove('active');keepFocus();}
 function confirmAndPay(){closeReview();const total=getTotalPrice(),sav=getTotalSavings();paymentTotal.textContent=fmtPrice(total);successTotal.textContent=fmtPrice(total);if(sav>0){successSavings.textContent='Ahorraste '+fmtPrice(sav);successSavings.style.display='';}else successSavings.style.display='none';resetPay();modalPayment.classList.add('active');}
 
 // ═══ PAYMENT ═══
-function resetPay(){payStep1.style.display='';payStep2.classList.remove('active');payStep3.classList.remove('active');document.querySelectorAll('.payment-option').forEach(o=>o.classList.remove('selected'));resetStars();}
+function resetPay(){payStep1.style.display='';payStep2.classList.remove('active');payStep3.classList.remove('active');$('payStep4').classList.remove('active');document.querySelectorAll('.payment-option').forEach(o=>o.classList.remove('selected'));resetStars();}
 function selectPayment(el){document.querySelectorAll('.payment-option').forEach(o=>o.classList.remove('selected'));el.classList.add('selected');setTimeout(()=>{payStep1.style.display='none';payStep2.classList.add('active');setTimeout(()=>{payStep2.classList.remove('active');payStep3.classList.add('active');playSuccessChime();},2000);},400);}
 function closePayment(){modalPayment.classList.remove('active');resetPay();keepFocus();}
-function closeSuccess(){modalPayment.classList.remove('active');resetPay();cart={};fruitCart={};renderCart();showState(stateIdle);keepFocus();}
+function closeSuccess(){modalPayment.classList.remove('active');resetPay();fullReset();}
 
-// ═══ STARS RATING ═══
+// ═══ STARS + AUTO-RESET ═══
 function initStars(){const row=$('starsRow');row.innerHTML='';for(let i=1;i<=5;i++){const b=document.createElement('button');b.className='star-btn';b.textContent='★';b.onclick=()=>rateStar(i);row.appendChild(b);}}
-function rateStar(n){const row=$('starsRow');if(row.classList.contains('locked'))return;row.classList.add('locked');document.querySelectorAll('.star-btn').forEach((b,i)=>b.classList.toggle('active',i<n));$('starsThanks').classList.add('visible');enviarFeedback(n);}
-function enviarFeedback(stars){console.log('Feedback enviado:',stars,'estrellas');showToast(`⭐ ¡Gracias! Calificaste con ${stars} estrella${stars>1?'s':''}.`,'blue');}
+function rateStar(n){
+  const row=$('starsRow');if(row.classList.contains('locked'))return;
+  row.classList.add('locked');
+  document.querySelectorAll('.star-btn').forEach((b,i)=>b.classList.toggle('active',i<n));
+  $('starsThanks').classList.add('visible');
+  enviarFeedback(n);
+  // Auto-reset after 3 seconds: show thank you then go to lock screen
+  setTimeout(()=>{
+    payStep3.classList.remove('active');
+    $('payStep4').classList.add('active');
+    setTimeout(()=>{
+      modalPayment.classList.remove('active');
+      resetPay();fullReset();
+    },3000);
+  },1500);
+}
+function enviarFeedback(stars){console.log('Feedback enviado:',stars,'estrellas');}
 function resetStars(){$('starsRow').classList.remove('locked');$('starsThanks').classList.remove('visible');document.querySelectorAll('.star-btn').forEach(b=>b.classList.remove('active'));}
 initStars();
 
 renderCart();keepFocus();
 
-// ═══ PWA FULLSCREEN & INSTALL ═══
-function tryFullscreen(){
-  const el=document.documentElement;
-  const rfs=el.requestFullscreen||el.webkitRequestFullscreen||el.mozRequestFullScreen||el.msRequestFullscreen;
-  if(rfs){rfs.call(el).catch(()=>{});}
-}
-// Fullscreen on first interaction
-function onFirstInteraction(){
-  // Only request fullscreen if NOT running as installed PWA (standalone already is fullscreen)
-  if(!window.matchMedia('(display-mode: standalone)').matches){tryFullscreen();}
-  document.removeEventListener('click',onFirstInteraction);
-  document.removeEventListener('touchstart',onFirstInteraction);
-}
-document.addEventListener('click',onFirstInteraction);
-document.addEventListener('touchstart',onFirstInteraction);
-
-// Capture PWA install prompt for potential use
-let deferredInstallPrompt=null;
-window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredInstallPrompt=e;});
-
-// Prevent pinch-to-zoom on tablet
-document.addEventListener('gesturestart',e=>e.preventDefault());
-document.addEventListener('gesturechange',e=>e.preventDefault());
-// Prevent double-tap zoom
-let lastTouchEnd=0;
-document.addEventListener('touchend',e=>{const now=Date.now();if(now-lastTouchEnd<300)e.preventDefault();lastTouchEnd=now;},false);
-// Lock orientation to landscape if supported
+// ═══ PWA FULLSCREEN ═══
+function tryFullscreen(){const el=document.documentElement;const rfs=el.requestFullscreen||el.webkitRequestFullscreen||el.mozRequestFullScreen||el.msRequestFullscreen;if(rfs){rfs.call(el).catch(()=>{});}}
+function onFirstInteraction(){if(!window.matchMedia('(display-mode: standalone)').matches){tryFullscreen();}document.removeEventListener('click',onFirstInteraction);document.removeEventListener('touchstart',onFirstInteraction);}
+document.addEventListener('click',onFirstInteraction);document.addEventListener('touchstart',onFirstInteraction);
+let deferredInstallPrompt=null;window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredInstallPrompt=e;});
+document.addEventListener('gesturestart',e=>e.preventDefault());document.addEventListener('gesturechange',e=>e.preventDefault());
+let lastTouchEnd=0;document.addEventListener('touchend',e=>{const now=Date.now();if(now-lastTouchEnd<300)e.preventDefault();lastTouchEnd=now;},false);
 try{screen.orientation?.lock?.('landscape').catch(()=>{});}catch(e){}
 </script>
 </body>

@@ -33,6 +33,19 @@ if('serviceWorker' in navigator){const sw=`self.addEventListener('install',e=>{s
 html,body{height:100%;width:100%;overflow:hidden;font-family:'Inter','Segoe UI',Roboto,Ubuntu,sans-serif;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;}
 .hidden-input{position:absolute;left:-9999px;top:-9999px;opacity:0;width:1px;height:1px;}
 
+/* ═══ WELCOME MODAL ═══ */
+.welcome-modal{display:none;position:fixed;inset:0;z-index:450;background:rgba(0,0,0,.35);backdrop-filter:blur(6px);align-items:center;justify-content:center;animation:fadeIn .3s ease;}
+.welcome-modal.active{display:flex;}
+.welcome-modal.fade-out{animation:fadeOutModal .6s ease forwards;}
+@keyframes fadeOutModal{to{opacity:0;transform:scale(1.03);}}
+.welcome-box{background:var(--white);border-radius:20px;padding:48px 56px;text-align:center;box-shadow:0 24px 80px rgba(0,0,0,.18);max-width:500px;width:88%;animation:popIn .45s ease;}
+.welcome-box .welcome-icon{font-size:56px;margin-bottom:16px;}
+.welcome-box .welcome-status{font-size:13px;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:2px;margin-bottom:8px;}
+.welcome-box .welcome-greeting{font-size:30px;font-weight:900;color:var(--blue);line-height:1.3;margin-bottom:12px;}
+.welcome-box .welcome-sub{font-size:14px;color:var(--text-light);line-height:1.5;}
+.welcome-box .welcome-bar{width:60px;height:4px;background:var(--blue);border-radius:2px;margin:20px auto 0;animation:welcomeBar 3s linear forwards;}
+@keyframes welcomeBar{from{width:60px;}to{width:0;}}
+
 /* ═══ WEIGHT LOCKDOWN ═══ */
 .weight-lockdown{display:none;position:fixed;inset:0;z-index:900;background:rgba(30,30,30,.92);backdrop-filter:blur(8px) grayscale(1);align-items:center;justify-content:center;}
 .weight-lockdown.active{display:flex;}
@@ -157,6 +170,17 @@ html,body{height:100%;width:100%;overflow:hidden;font-family:'Inter','Segoe UI',
 <input type="text" id="scannerInput" class="hidden-input" autocomplete="off">
 
 <div class="weight-lockdown" id="weightLockdown"><div class="lockdown-box"><div class="lockdown-icon">⚠️</div><h2>DISCREPANCIA DE PESO DETECTADA</h2><p>Por favor, reubique el último producto en el changuito o aguarde a un asistente.</p><div class="lockdown-weights"><div class="lw"><div class="lw-label">Peso esperado</div><div class="lw-val" id="lwExpected">0 g</div></div><div class="lw"><div class="lw-label">Peso detectado</div><div class="lw-val red" id="lwDetected">0 g</div></div></div><button class="btn-fix-weight" onclick="resolveWeight()">✓ Producto reubicado</button></div></div>
+
+<!-- Welcome modal (post-DNI validation) -->
+<div class="welcome-modal" id="welcomeModal">
+  <div class="welcome-box">
+    <div class="welcome-icon">👤</div>
+    <div class="welcome-status">✓ Identidad validada</div>
+    <div class="welcome-greeting" id="welcomeGreeting">Bienvenido, Gabriel</div>
+    <div class="welcome-sub">Tu compra segura está siendo monitoreada.</div>
+    <div class="welcome-bar"></div>
+  </div>
+</div>
 
 <div class="lock-screen" id="lockScreen">
   <div class="lock-inner lock-sub active" id="lockMain"><img class="lock-logo" src="https://raw.githubusercontent.com/TheRock1111/Smart-Cart/main/logo_carrefour.jpg.jpg" alt="Carrefour"><div class="lock-title">Bienvenido/a a Smart Cart</div><div class="lock-subtitle">Escaneá tu DNI para comenzar tu compra</div><button class="btn-lock btn-lock-secondary" onclick="activateDniScan()">🪪 Escanear mi DNI</button></div>
@@ -311,7 +335,16 @@ function processDNI(rawData){
   $('lockScreen').classList.add('dismissed');
   setTimeout(()=>$('lockScreen').style.display='none',600);
   playScanBeep();
-  showToast(`👤 Identidad validada. ${saludo}, ${nombre}. Tu compra segura está siendo monitoreada.`,'',true);
+  // Show welcome modal
+  $('welcomeGreeting').textContent=`${saludo}, ${nombre}`;
+  const wm=$('welcomeModal');
+  wm.classList.remove('fade-out');
+  wm.classList.add('active');
+  // Auto-dismiss after 3 seconds with fade-out
+  setTimeout(()=>{
+    wm.classList.add('fade-out');
+    setTimeout(()=>{wm.classList.remove('active','fade-out');},600);
+  },3000);
   initCamera();
   startProductScanning();
 }

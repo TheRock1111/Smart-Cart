@@ -11,8 +11,8 @@
 <title>Carrefour — Smart Cart by GJCK</title>
 <script>
 const manifest={name:"Smart Cart by GJCK — Carrefour",short_name:"Smart Cart",description:"Sistema de autocobro inteligente",start_url:location.href,display:"standalone",orientation:"landscape",background_color:"#ffffff",theme_color:"#00387b",icons:[{src:"data:image/svg+xml,"+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" rx="80" fill="#00387b"/><text x="256" y="300" text-anchor="middle" font-family="Arial" font-weight="bold" font-size="200" fill="white">SC</text><text x="256" y="400" text-anchor="middle" font-family="Arial" font-weight="bold" font-size="80" fill="#e81a24">GJCK</text></svg>'),sizes:"512x512",type:"image/svg+xml",purpose:"any maskable"}]};
-const mb=new Blob([JSON.stringify(manifest)],{type:'application/json'});const mu=URL.createObjectURL(mb);const ml=document.createElement('link');ml.rel='manifest';ml.href=mu;document.head.appendChild(ml);
-if('serviceWorker' in navigator){const sw=`self.addEventListener('install',e=>{self.skipWaiting();});self.addEventListener('activate',e=>{e.waitUntil(clients.claim());});self.addEventListener('fetch',e=>{e.respondWith(fetch(e.request).catch(()=>caches.match(e.request)));});`;const sb=new Blob([sw],{type:'application/javascript'});navigator.serviceWorker.register(URL.createObjectURL(sb),{scope:'/'}).catch(()=>{});}
+const mb=new Blob([JSON.stringify(manifest)],{type:'application/json'});const ml=document.createElement('link');ml.rel='manifest';ml.href=URL.createObjectURL(mb);document.head.appendChild(ml);
+if('serviceWorker' in navigator){const sw=`self.addEventListener('install',e=>{self.skipWaiting();});self.addEventListener('activate',e=>{e.waitUntil(clients.claim());});self.addEventListener('fetch',e=>{e.respondWith(fetch(e.request).catch(()=>caches.match(e.request)));});`;navigator.serviceWorker.register(URL.createObjectURL(new Blob([sw],{type:'application/javascript'})),{scope:'/'}).catch(()=>{});}
 </script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
@@ -31,7 +31,7 @@ if('serviceWorker' in navigator){const sw=`self.addEventListener('install',e=>{s
   --radius:12px;--radius-lg:16px;--transition:.22s ease;
 }
 html,body{height:100%;width:100%;overflow:hidden;font-family:'Inter','Segoe UI',Roboto,Ubuntu,sans-serif;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;}
-#scannerInput{position:absolute;left:-9999px;top:-9999px;opacity:0;width:1px;height:1px;}
+.hidden-input{position:absolute;left:-9999px;top:-9999px;opacity:0;width:1px;height:1px;}
 
 /* ═══ WEIGHT LOCKDOWN ═══ */
 .weight-lockdown{display:none;position:fixed;inset:0;z-index:900;background:rgba(30,30,30,.92);backdrop-filter:blur(8px) grayscale(1);align-items:center;justify-content:center;}
@@ -71,188 +71,74 @@ html,body{height:100%;width:100%;overflow:hidden;font-family:'Inter','Segoe UI',
 .logo-wrap{display:flex;align-items:center;justify-content:center;max-width:200px;margin:0 auto;}
 .logo-wrap img{width:100%;height:auto;max-height:46px;object-fit:contain;}
 .panel-header .subtitle{font-size:9px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--blue);margin-top:6px;opacity:.5;}
-.cart-items{flex:1;overflow-y:auto;padding:4px 0;scrollbar-width:none;}
-.cart-items::-webkit-scrollbar{display:none;}
-.cart-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:var(--text-lighter);font-size:13px;gap:10px;}
-.cart-empty svg{opacity:.25;}.cart-empty span{font-weight:500;}
+.cart-items{flex:1;overflow-y:auto;padding:4px 0;scrollbar-width:none;}.cart-items::-webkit-scrollbar{display:none;}
+.cart-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:var(--text-lighter);font-size:13px;gap:10px;}.cart-empty svg{opacity:.25;}.cart-empty span{font-weight:500;}
 .cart-item{display:flex;align-items:center;padding:10px 14px;border-bottom:1px solid var(--border-light);animation:slideIn .3s ease;transition:background var(--transition);}
 .cart-item:hover{background:#f8f9fb;}
 .cart-item .item-qty-badge{width:24px;height:24px;border-radius:7px;background:var(--blue-pale);color:var(--blue);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-right:8px;flex-shrink:0;}
-.cart-item .item-info{flex:1;min-width:0;}
-.cart-item .item-name{font-size:12px;font-weight:500;color:var(--text);line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.cart-item .item-unit-price{font-size:10px;color:var(--text-lighter);margin-top:1px;}
+.cart-item .item-info{flex:1;min-width:0;}.cart-item .item-name{font-size:12px;font-weight:500;color:var(--text);line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}.cart-item .item-unit-price{font-size:10px;color:var(--text-lighter);margin-top:1px;}
 .cart-item .item-price{font-size:13px;font-weight:700;color:var(--blue);white-space:nowrap;margin:0 6px;}
-.cart-item .item-delete{background:none;border:none;cursor:pointer;padding:5px;border-radius:6px;color:var(--text-lighter);transition:all var(--transition);display:flex;align-items:center;}
-.cart-item .item-delete:hover{color:var(--red);background:var(--red-soft);}
-.cart-item .item-delete svg{width:14px;height:14px;}
+.cart-item .item-delete{background:none;border:none;cursor:pointer;padding:5px;border-radius:6px;color:var(--text-lighter);transition:all var(--transition);display:flex;align-items:center;}.cart-item .item-delete:hover{color:var(--red);background:var(--red-soft);}.cart-item .item-delete svg{width:14px;height:14px;}
 .cart-item.promo .item-name::after{content:'🏷️';margin-left:4px;font-size:9px;}
 .cart-item.fruit .item-qty-badge{background:var(--green-bg);color:var(--green);}
 .panel-footer{border-top:1px solid var(--border);padding:12px 16px;background:linear-gradient(180deg,#fafbfc,var(--white));}
 .total-items-count{font-size:10px;color:var(--text-lighter);margin-bottom:6px;font-weight:500;}
-.savings-row{display:none;align-items:center;gap:5px;margin-bottom:8px;padding:6px 9px;background:var(--red-soft);border-radius:8px;border:1px solid rgba(232,26,36,.1);}
-.savings-row.visible{display:flex;}
-.savings-row svg{width:13px;height:13px;color:var(--red);flex-shrink:0;}
-.savings-row .savings-label{font-size:11px;font-weight:600;color:var(--red);flex:1;}
-.savings-row .savings-value{font-size:12px;font-weight:800;color:var(--red);}
-.total-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px;}
-.total-label{font-size:12px;font-weight:700;color:var(--text-light);text-transform:uppercase;letter-spacing:1.5px;}
-.total-value{font-size:26px;font-weight:900;color:var(--text);}
-.btn-checkout{width:100%;padding:14px;background:linear-gradient(135deg,var(--blue),var(--blue-dark));color:var(--white);border:none;border-radius:var(--radius);font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;letter-spacing:.5px;text-transform:uppercase;box-shadow:0 4px 18px var(--blue-glow);transition:all var(--transition);}
-.btn-checkout:hover{transform:translateY(-1px);box-shadow:0 8px 24px var(--blue-glow);}
+.savings-row{display:none;align-items:center;gap:5px;margin-bottom:8px;padding:6px 9px;background:var(--red-soft);border-radius:8px;border:1px solid rgba(232,26,36,.1);}.savings-row.visible{display:flex;}.savings-row svg{width:13px;height:13px;color:var(--red);flex-shrink:0;}.savings-row .savings-label{font-size:11px;font-weight:600;color:var(--red);flex:1;}.savings-row .savings-value{font-size:12px;font-weight:800;color:var(--red);}
+.total-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px;}.total-label{font-size:12px;font-weight:700;color:var(--text-light);text-transform:uppercase;letter-spacing:1.5px;}.total-value{font-size:26px;font-weight:900;color:var(--text);}
+.btn-checkout{width:100%;padding:14px;background:linear-gradient(135deg,var(--blue),var(--blue-dark));color:var(--white);border:none;border-radius:var(--radius);font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;letter-spacing:.5px;text-transform:uppercase;box-shadow:0 4px 18px var(--blue-glow);transition:all var(--transition);}.btn-checkout:hover{transform:translateY(-1px);box-shadow:0 8px 24px var(--blue-glow);}
 
-/* RIGHT PANEL */
+/* RIGHT */
 .panel-right{flex:1;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;background:linear-gradient(160deg,#f7f8fb,#eef1f6);}
-.state{display:none;width:100%;height:100%;align-items:center;justify-content:center;}
-.state.active{display:flex;}
-.state-idle{flex-direction:column;gap:16px;text-align:center;}
-.state-idle .idle-icon{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--blue-pale),#d6e4f5);display:flex;align-items:center;justify-content:center;animation:pulse 2.5s ease-in-out infinite;box-shadow:0 4px 20px rgba(0,56,123,.08);}
-.state-idle .idle-icon svg{color:var(--blue);width:34px;height:34px;}
-.state-idle .idle-text{font-size:20px;font-weight:700;color:var(--text-lighter);}
-.state-idle .idle-hint{font-size:13px;color:#b8bec8;font-weight:500;}
-.state-scan{flex-direction:column;gap:16px;text-align:center;animation:fadeIn .35s ease;}
-.state-scan .product-image{max-height:280px;max-width:340px;object-fit:contain;border-radius:var(--radius-lg);filter:drop-shadow(0 10px 30px rgba(0,0,0,.1));}
-.state-scan .product-name{font-size:20px;font-weight:700;color:var(--text);max-width:420px;}
-.state-scan .product-price{font-size:30px;font-weight:900;color:var(--blue);}
-.scan-badge{display:inline-flex;align-items:center;gap:6px;background:var(--green-bg);color:var(--green);padding:6px 14px;border-radius:20px;font-size:12px;font-weight:600;animation:popIn .4s ease;}
-.scan-badge.promo{background:#eff6ff;color:var(--blue);}
-.state-offer{flex-direction:column;align-items:center;padding:24px 36px;gap:20px;animation:fadeIn .4s ease;}
-.offer-banner{background:linear-gradient(135deg,var(--red),#c4151e);color:var(--white);padding:16px 36px;border-radius:var(--radius-lg);text-align:center;font-size:22px;font-weight:800;box-shadow:0 8px 28px rgba(232,26,36,.2);width:100%;max-width:740px;}
-.offer-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;width:100%;max-width:740px;}
-.offer-card{background:var(--white);border-radius:var(--radius-lg);padding:16px 12px;text-align:center;box-shadow:var(--shadow);display:flex;flex-direction:column;align-items:center;gap:7px;transition:transform var(--transition),box-shadow var(--transition);border:1.5px solid transparent;}
-.offer-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg);border-color:var(--red);}
-.offer-card img{height:110px;object-fit:contain;}
-.offer-card .offer-product-name{font-size:11px;font-weight:600;color:var(--text);line-height:1.3;min-height:28px;}
-.offer-card .price-original{font-size:12px;color:var(--text-lighter);text-decoration:line-through;}
-.offer-card .price-offer{font-size:18px;font-weight:800;color:var(--red);}
-.offer-card .offer-scan-hint{font-size:10px;font-weight:600;color:var(--blue);background:var(--blue-pale);padding:3px 9px;border-radius:10px;}
+.state{display:none;width:100%;height:100%;align-items:center;justify-content:center;}.state.active{display:flex;}
+.state-idle{flex-direction:column;gap:16px;text-align:center;}.state-idle .idle-icon{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--blue-pale),#d6e4f5);display:flex;align-items:center;justify-content:center;animation:pulse 2.5s ease-in-out infinite;}.state-idle .idle-icon svg{color:var(--blue);width:34px;height:34px;}.state-idle .idle-text{font-size:20px;font-weight:700;color:var(--text-lighter);}.state-idle .idle-hint{font-size:13px;color:#b8bec8;font-weight:500;}
+.state-scan{flex-direction:column;gap:16px;text-align:center;animation:fadeIn .35s ease;}.state-scan .product-image{max-height:280px;max-width:340px;object-fit:contain;border-radius:var(--radius-lg);filter:drop-shadow(0 10px 30px rgba(0,0,0,.1));}.state-scan .product-name{font-size:20px;font-weight:700;color:var(--text);max-width:420px;}.state-scan .product-price{font-size:30px;font-weight:900;color:var(--blue);}.scan-badge{display:inline-flex;align-items:center;gap:6px;background:var(--green-bg);color:var(--green);padding:6px 14px;border-radius:20px;font-size:12px;font-weight:600;animation:popIn .4s ease;}.scan-badge.promo{background:#eff6ff;color:var(--blue);}
+.state-offer{flex-direction:column;align-items:center;padding:24px 36px;gap:20px;animation:fadeIn .4s ease;}.offer-banner{background:linear-gradient(135deg,var(--red),#c4151e);color:var(--white);padding:16px 36px;border-radius:var(--radius-lg);text-align:center;font-size:22px;font-weight:800;box-shadow:0 8px 28px rgba(232,26,36,.2);width:100%;max-width:740px;}.offer-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;width:100%;max-width:740px;}.offer-card{background:var(--white);border-radius:var(--radius-lg);padding:16px 12px;text-align:center;box-shadow:var(--shadow);display:flex;flex-direction:column;align-items:center;gap:7px;transition:transform var(--transition),box-shadow var(--transition);border:1.5px solid transparent;}.offer-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg);border-color:var(--red);}.offer-card img{height:110px;object-fit:contain;}.offer-card .offer-product-name{font-size:11px;font-weight:600;line-height:1.3;min-height:28px;}.offer-card .price-original{font-size:12px;color:var(--text-lighter);text-decoration:line-through;}.offer-card .price-offer{font-size:18px;font-weight:800;color:var(--red);}.offer-card .offer-scan-hint{font-size:10px;font-weight:600;color:var(--blue);background:var(--blue-pale);padding:3px 9px;border-radius:10px;}
 .btn-close-offer{padding:10px 24px;background:var(--white);color:var(--text-light);border:1.5px solid var(--border);border-radius:var(--radius);font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;}
 
-/* FLOATING TOOLBAR — centered, uniform spacing */
+/* TOOLBAR */
 .floating-toolbar{position:absolute;bottom:18px;left:0;right:0;display:flex;gap:12px;z-index:10;animation:fadeInUp .5s ease .3s both;justify-content:center;}
-.tb-btn{display:flex;align-items:center;gap:8px;padding:14px 24px;background:var(--white);border:1.5px solid var(--border);border-radius:28px;font-family:inherit;font-size:13px;font-weight:600;color:var(--text);cursor:pointer;transition:all var(--transition);box-shadow:var(--shadow-md);white-space:nowrap;min-height:52px;}
-.tb-btn:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg);border-color:var(--blue);}
-.tb-btn svg{width:18px;height:18px;color:var(--blue);flex-shrink:0;}
-.tb-btn.help-btn{background:linear-gradient(135deg,#fbbf24,var(--orange));border-color:transparent;color:#78350f;box-shadow:0 4px 18px rgba(245,158,11,.3);}
-.tb-btn.help-btn svg{color:#78350f;}
-.tb-btn.help-btn:hover{box-shadow:0 8px 28px rgba(245,158,11,.35);}
+.tb-btn{display:flex;align-items:center;gap:8px;padding:14px 24px;background:var(--white);border:1.5px solid var(--border);border-radius:28px;font-family:inherit;font-size:13px;font-weight:600;color:var(--text);cursor:pointer;transition:all var(--transition);box-shadow:var(--shadow-md);white-space:nowrap;min-height:52px;}.tb-btn:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg);border-color:var(--blue);}.tb-btn svg{width:18px;height:18px;color:var(--blue);flex-shrink:0;}
+.tb-btn.help-btn{background:linear-gradient(135deg,#fbbf24,var(--orange));border-color:transparent;color:#78350f;box-shadow:0 4px 18px rgba(245,158,11,.3);}.tb-btn.help-btn svg{color:#78350f;}.tb-btn.help-btn:hover{box-shadow:0 8px 28px rgba(245,158,11,.35);}
 
-/* SECURITY CAM */
-.security-cam{position:absolute;top:16px;right:16px;display:flex;align-items:center;gap:12px;z-index:10;animation:fadeIn .8s ease .5s both;background:var(--white);padding:8px 16px 8px 8px;border-radius:var(--radius);box-shadow:var(--shadow-lg);border:1px solid var(--border);}
-.cam-video-wrap{width:56px;height:56px;border-radius:10px;overflow:hidden;position:relative;background:#000;flex-shrink:0;}
-.cam-video-wrap video{width:100%;height:100%;object-fit:cover;transform:scaleX(-1);}
-.cam-info{display:flex;flex-direction:column;gap:3px;}
-.cam-dot-row{display:flex;align-items:center;gap:5px;}
-.cam-dot{width:7px;height:7px;border-radius:50%;background:var(--red);animation:blink 1.2s ease-in-out infinite;box-shadow:0 0 6px var(--red);flex-shrink:0;}
-.cam-rec{font-size:9px;font-weight:800;color:var(--red);letter-spacing:1.2px;}
-.cam-surveillance{font-size:8px;font-weight:600;color:var(--text-lighter);text-transform:uppercase;letter-spacing:.4px;line-height:1.35;max-width:150px;}
+/* CAM */
+.security-cam{position:absolute;top:16px;right:16px;display:flex;align-items:center;gap:12px;z-index:10;animation:fadeIn .8s ease .5s both;background:var(--white);padding:8px 16px 8px 8px;border-radius:var(--radius);box-shadow:var(--shadow-lg);border:1px solid var(--border);}.cam-video-wrap{width:56px;height:56px;border-radius:10px;overflow:hidden;background:#000;flex-shrink:0;}.cam-video-wrap video{width:100%;height:100%;object-fit:cover;transform:scaleX(-1);}.cam-info{display:flex;flex-direction:column;gap:3px;}.cam-dot-row{display:flex;align-items:center;gap:5px;}.cam-dot{width:7px;height:7px;border-radius:50%;background:var(--red);animation:blink 1.2s ease-in-out infinite;box-shadow:0 0 6px var(--red);flex-shrink:0;}.cam-rec{font-size:9px;font-weight:800;color:var(--red);letter-spacing:1.2px;}.cam-surveillance{font-size:8px;font-weight:600;color:var(--text-lighter);text-transform:uppercase;letter-spacing:.4px;line-height:1.35;max-width:150px;}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.15}}
 
-/* ═══ MODALS ═══ */
-.modal-overlay,.review-overlay,.payment-overlay,.fruits-overlay,.map-overlay,.coupons-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;align-items:center;justify-content:center;backdrop-filter:blur(4px);}
-.modal-overlay.active,.review-overlay.active,.payment-overlay.active,.fruits-overlay.active,.map-overlay.active,.coupons-overlay.active{display:flex;}
-.modal-box{background:var(--white);border-radius:var(--radius-lg);padding:36px 44px;text-align:center;box-shadow:var(--shadow-xl);display:flex;flex-direction:column;align-items:center;gap:16px;animation:popIn .35s ease;}
-.spinner{width:40px;height:40px;border:4px solid var(--blue-pale);border-top-color:var(--blue);border-radius:50%;animation:spin 1s linear infinite;}
-.modal-box p{font-size:16px;font-weight:600;color:var(--text);}
-.modal-box .modal-hint{font-size:12px;color:var(--text-lighter);}
+/* MODALS */
+.modal-overlay,.review-overlay,.payment-overlay,.fruits-overlay,.map-overlay,.coupons-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;align-items:center;justify-content:center;backdrop-filter:blur(4px);}.modal-overlay.active,.review-overlay.active,.payment-overlay.active,.fruits-overlay.active,.map-overlay.active,.coupons-overlay.active{display:flex;}
+.modal-box{background:var(--white);border-radius:var(--radius-lg);padding:36px 44px;text-align:center;box-shadow:var(--shadow-xl);display:flex;flex-direction:column;align-items:center;gap:16px;animation:popIn .35s ease;}.spinner{width:40px;height:40px;border:4px solid var(--blue-pale);border-top-color:var(--blue);border-radius:50%;animation:spin 1s linear infinite;}.modal-box p{font-size:16px;font-weight:600;color:var(--text);}.modal-box .modal-hint{font-size:12px;color:var(--text-lighter);}
 .btn-close-modal{padding:10px 24px;background:var(--white);color:var(--text-light);border:1.5px solid var(--border);border-radius:var(--radius);font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;}
 
 /* REVIEW */
-.review-box{background:var(--white);border-radius:var(--radius-lg);padding:28px 32px;box-shadow:var(--shadow-xl);max-width:640px;width:94%;max-height:85vh;animation:popIn .35s ease;display:flex;flex-direction:column;}
-.review-box h2{font-size:18px;font-weight:800;color:var(--blue);margin-bottom:4px;text-align:center;}
-.review-box .review-hint{font-size:12px;color:var(--text-lighter);margin-bottom:14px;text-align:center;}
-.review-list{flex:1;overflow-y:auto;scrollbar-width:none;max-height:300px;margin-bottom:16px;}
-.review-list::-webkit-scrollbar{display:none;}
-.review-item{display:flex;align-items:center;gap:12px;padding:12px 14px;margin-bottom:8px;background:var(--white);border-radius:var(--radius);border:1.5px solid #d5d8dc;}
-.review-item:hover{box-shadow:var(--shadow);}
-.review-item img{width:48px;height:48px;object-fit:contain;border-radius:8px;background:var(--bg);flex-shrink:0;}
-.review-item .ri-info{flex:1;min-width:0;}
-.review-item .ri-name{font-size:12px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.review-item .ri-qty{font-size:10px;color:var(--text-lighter);}
-.review-item .ri-saving{font-size:10px;font-weight:600;color:var(--red);}
-.review-item .ri-price{font-size:13px;font-weight:700;color:var(--blue);white-space:nowrap;}
-.review-footer{border-top:1px solid var(--border);padding-top:14px;text-align:center;}
-.review-savings{font-size:13px;font-weight:700;color:var(--red);background:var(--red-soft);padding:6px 14px;border-radius:16px;display:inline-block;margin-bottom:10px;}
-.review-total{font-size:26px;font-weight:900;color:var(--text);margin-bottom:16px;}
-.review-buttons{display:flex;gap:12px;justify-content:center;}
-.btn-keep-shopping{padding:13px 28px;background:var(--white);color:var(--text-light);border:1.5px solid var(--border);border-radius:var(--radius);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;}
-.btn-confirm-pay{padding:13px 28px;background:linear-gradient(135deg,var(--blue),var(--blue-dark));color:var(--white);border:none;border-radius:var(--radius);font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 4px 18px var(--blue-glow);}
+.review-box{background:var(--white);border-radius:var(--radius-lg);padding:28px 32px;box-shadow:var(--shadow-xl);max-width:640px;width:94%;max-height:85vh;animation:popIn .35s ease;display:flex;flex-direction:column;}.review-box h2{font-size:18px;font-weight:800;color:var(--blue);margin-bottom:4px;text-align:center;}.review-box .review-hint{font-size:12px;color:var(--text-lighter);margin-bottom:14px;text-align:center;}.review-list{flex:1;overflow-y:auto;scrollbar-width:none;max-height:300px;margin-bottom:16px;}.review-list::-webkit-scrollbar{display:none;}
+.review-item{display:flex;align-items:center;gap:12px;padding:12px 14px;margin-bottom:8px;background:var(--white);border-radius:var(--radius);border:1.5px solid #d5d8dc;}.review-item:hover{box-shadow:var(--shadow);}.review-item img{width:48px;height:48px;object-fit:contain;border-radius:8px;background:var(--bg);flex-shrink:0;}.review-item .ri-info{flex:1;min-width:0;}.review-item .ri-name{font-size:12px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}.review-item .ri-qty{font-size:10px;color:var(--text-lighter);}.review-item .ri-saving{font-size:10px;font-weight:600;color:var(--red);}.review-item .ri-price{font-size:13px;font-weight:700;color:var(--blue);white-space:nowrap;}
+.review-footer{border-top:1px solid var(--border);padding-top:14px;text-align:center;}.review-savings{font-size:13px;font-weight:700;color:var(--red);background:var(--red-soft);padding:6px 14px;border-radius:16px;display:inline-block;margin-bottom:10px;}.review-total{font-size:26px;font-weight:900;color:var(--text);margin-bottom:16px;}.review-buttons{display:flex;gap:12px;justify-content:center;}.btn-keep-shopping{padding:13px 28px;background:var(--white);color:var(--text-light);border:1.5px solid var(--border);border-radius:var(--radius);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;}.btn-confirm-pay{padding:13px 28px;background:linear-gradient(135deg,var(--blue),var(--blue-dark));color:var(--white);border:none;border-radius:var(--radius);font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 4px 18px var(--blue-glow);}
 
-/* FRUITS — no QR, scan ticket from scale */
-.fruits-box{background:var(--white);border-radius:var(--radius-lg);padding:36px 40px;box-shadow:var(--shadow-xl);max-width:460px;width:92%;animation:popIn .35s ease;text-align:center;}
-.fruits-box h2{font-size:18px;font-weight:800;color:var(--blue);margin-bottom:8px;}
-.fruits-scan-icon{width:90px;height:90px;margin:16px auto;border-radius:50%;background:var(--green-bg);display:flex;align-items:center;justify-content:center;animation:pulse 2s ease-in-out infinite;}
-.fruits-scan-icon svg{width:40px;height:40px;color:var(--green);}
-.fruits-box .fruits-hint{font-size:14px;color:var(--text);font-weight:600;margin-bottom:6px;}
-.fruits-box .fruits-sub-hint{font-size:12px;color:var(--text-lighter);margin-bottom:20px;}
+/* FRUITS */
+.fruits-box{background:var(--white);border-radius:var(--radius-lg);padding:36px 40px;box-shadow:var(--shadow-xl);max-width:460px;width:92%;animation:popIn .35s ease;text-align:center;}.fruits-box h2{font-size:18px;font-weight:800;color:var(--blue);margin-bottom:8px;}.fruits-scan-icon{width:90px;height:90px;margin:16px auto;border-radius:50%;background:var(--green-bg);display:flex;align-items:center;justify-content:center;animation:pulse 2s ease-in-out infinite;}.fruits-scan-icon svg{width:40px;height:40px;color:var(--green);}.fruits-box .fruits-hint{font-size:14px;color:var(--text);font-weight:600;margin-bottom:6px;}.fruits-box .fruits-sub-hint{font-size:12px;color:var(--text-lighter);margin-bottom:20px;}
 
 /* MAP */
-.map-box{background:var(--white);border-radius:var(--radius-lg);padding:24px 28px;box-shadow:var(--shadow-xl);max-width:700px;width:94%;animation:popIn .35s ease;text-align:center;}
-.map-box h2{font-size:18px;font-weight:800;color:var(--blue);margin-bottom:4px;}
-.map-box .map-hint{font-size:12px;color:var(--text-lighter);margin-bottom:16px;}
-.store-map{position:relative;width:100%;height:310px;background:#f0f2f5;border-radius:var(--radius);overflow:hidden;border:1px solid var(--border);}
-.aisle{position:absolute;background:var(--blue-pale);border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;color:var(--blue);letter-spacing:.5px;text-transform:uppercase;}
-.section-label{position:absolute;font-size:7.5px;font-weight:700;color:var(--text-lighter);text-transform:uppercase;letter-spacing:.5px;}
-.map-dot{position:absolute;width:14px;height:14px;border-radius:50%;background:var(--red);box-shadow:0 0 0 4px rgba(232,26,36,.25);transition:left 2s ease,top 2s ease;z-index:5;}
-.map-dot::after{content:'';position:absolute;inset:-6px;border-radius:50%;border:2px solid var(--red);animation:ping 1.5s ease-in-out infinite;opacity:0;}
+.map-box{background:var(--white);border-radius:var(--radius-lg);padding:24px 28px;box-shadow:var(--shadow-xl);max-width:700px;width:94%;animation:popIn .35s ease;text-align:center;}.map-box h2{font-size:18px;font-weight:800;color:var(--blue);margin-bottom:4px;}.map-box .map-hint{font-size:12px;color:var(--text-lighter);margin-bottom:16px;}.store-map{position:relative;width:100%;height:310px;background:#f0f2f5;border-radius:var(--radius);overflow:hidden;border:1px solid var(--border);}.aisle{position:absolute;background:var(--blue-pale);border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;color:var(--blue);letter-spacing:.5px;text-transform:uppercase;}.section-label{position:absolute;font-size:7.5px;font-weight:700;color:var(--text-lighter);text-transform:uppercase;letter-spacing:.5px;}.map-dot{position:absolute;width:14px;height:14px;border-radius:50%;background:var(--red);box-shadow:0 0 0 4px rgba(232,26,36,.25);transition:left 2s ease,top 2s ease;z-index:5;}.map-dot::after{content:'';position:absolute;inset:-6px;border-radius:50%;border:2px solid var(--red);animation:ping 1.5s ease-in-out infinite;opacity:0;}
 @keyframes ping{0%{transform:scale(1);opacity:.6}100%{transform:scale(2.2);opacity:0}}
-.map-legend{display:flex;align-items:center;justify-content:center;gap:16px;margin-top:12px;font-size:10px;color:var(--text-light);font-weight:500;}
-.map-legend .dot-red{width:10px;height:10px;border-radius:50%;background:var(--red);}
+.map-legend{display:flex;align-items:center;justify-content:center;gap:16px;margin-top:12px;font-size:10px;color:var(--text-light);font-weight:500;}.map-legend .dot-red{width:10px;height:10px;border-radius:50%;background:var(--red);}
 
 /* COUPONS */
-.coupons-box{background:var(--white);border-radius:var(--radius-lg);padding:28px 32px;box-shadow:var(--shadow-xl);max-width:520px;width:92%;animation:popIn .35s ease;text-align:center;}
-.coupons-box h2{font-size:18px;font-weight:800;color:var(--blue);margin-bottom:4px;}
-.coupons-box .coupons-hint{font-size:12px;color:var(--text-lighter);margin-bottom:16px;}
-.coupon-card{display:flex;align-items:center;gap:14px;padding:14px 16px;background:var(--bg);border-radius:var(--radius);margin-bottom:10px;border-left:4px solid var(--red);text-align:left;}
-.coupon-card:hover{background:var(--red-soft);}
-.coupon-emoji{font-size:28px;}.coupon-info{flex:1;}.coupon-title{font-size:13px;font-weight:700;color:var(--text);}.coupon-desc{font-size:11px;color:var(--text-light);margin-top:2px;}
-.coupon-badge{padding:4px 10px;background:var(--red);color:var(--white);border-radius:12px;font-size:10px;font-weight:700;white-space:nowrap;}
-.coupons-nosocio{padding:24px;text-align:center;}
-.coupons-nosocio .nosocio-emoji{font-size:48px;margin-bottom:12px;}
-.coupons-nosocio .nosocio-title{font-size:16px;font-weight:700;color:var(--text);margin-bottom:8px;}
-.coupons-nosocio .nosocio-desc{font-size:13px;color:var(--text-light);line-height:1.5;}
+.coupons-box{background:var(--white);border-radius:var(--radius-lg);padding:28px 32px;box-shadow:var(--shadow-xl);max-width:520px;width:92%;animation:popIn .35s ease;text-align:center;}.coupons-box h2{font-size:18px;font-weight:800;color:var(--blue);margin-bottom:4px;}.coupons-box .coupons-hint{font-size:12px;color:var(--text-lighter);margin-bottom:16px;}
+.coupons-nosocio{padding:24px;text-align:center;}.coupons-nosocio .nosocio-emoji{font-size:48px;margin-bottom:12px;}.coupons-nosocio .nosocio-title{font-size:16px;font-weight:700;color:var(--text);margin-bottom:8px;}.coupons-nosocio .nosocio-desc{font-size:13px;color:var(--text-light);line-height:1.5;}
 
 /* PAYMENT */
-.payment-box{background:var(--white);border-radius:var(--radius-lg);padding:28px 36px;text-align:center;box-shadow:var(--shadow-xl);display:flex;flex-direction:column;align-items:center;gap:16px;animation:popIn .35s ease;max-width:520px;width:92%;}
-.payment-box h2{font-size:18px;font-weight:800;color:var(--blue);}
-.payment-box .payment-total{font-size:28px;font-weight:900;color:var(--text);margin-top:-4px;}
+.payment-box{background:var(--white);border-radius:var(--radius-lg);padding:28px 36px;text-align:center;box-shadow:var(--shadow-xl);display:flex;flex-direction:column;align-items:center;gap:16px;animation:popIn .35s ease;max-width:520px;width:92%;}.payment-box h2{font-size:18px;font-weight:800;color:var(--blue);}.payment-box .payment-total{font-size:28px;font-weight:900;color:var(--text);margin-top:-4px;}
 .payment-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;width:100%;max-width:340px;}
-.payment-option{background:var(--white);border:2px solid var(--border);border-radius:var(--radius);padding:18px 12px;display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;transition:all var(--transition);min-height:90px;justify-content:center;}
-.payment-option:hover{border-color:var(--blue);box-shadow:0 4px 18px var(--blue-glow);transform:translateY(-2px);}
-.payment-option.selected{border-color:var(--blue);background:var(--blue-pale);}
-.payment-option svg{width:30px;height:30px;color:var(--blue);}
-.payment-option img.pay-logo{height:26px;width:auto;object-fit:contain;}
-.payment-option .pay-label{font-size:12px;font-weight:600;color:var(--text);}
+.payment-option{background:var(--white);border:2px solid var(--border);border-radius:var(--radius);padding:18px 12px;display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;transition:all var(--transition);min-height:90px;justify-content:center;}.payment-option:hover{border-color:var(--blue);box-shadow:0 4px 18px var(--blue-glow);transform:translateY(-2px);}.payment-option.selected{border-color:var(--blue);background:var(--blue-pale);}.payment-option svg{width:30px;height:30px;color:var(--blue);}.payment-option img.pay-logo{height:26px;width:auto;object-fit:contain;}.payment-option .pay-label{font-size:12px;font-weight:600;color:var(--text);}
 .btn-cancel-pay{padding:10px 24px;background:var(--white);color:var(--text-light);border:1.5px solid var(--border);border-radius:var(--radius);font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;margin-top:4px;}
-.payment-processing,.payment-success,.payment-thankyou{display:none;flex-direction:column;align-items:center;gap:14px;}
-.payment-processing.active,.payment-success.active,.payment-thankyou.active{display:flex;}
-.payment-processing p{font-size:16px;font-weight:600;color:var(--text);}
-.payment-success .check-circle{width:60px;height:60px;border-radius:50%;background:var(--green-bg);display:flex;align-items:center;justify-content:center;}
-.payment-success .check-circle svg{color:var(--green);width:30px;height:30px;}
-.payment-success h3{font-size:19px;font-weight:800;color:var(--text);}
-.success-savings{font-size:13px;font-weight:700;color:var(--red);background:var(--red-soft);padding:5px 14px;border-radius:16px;}
-.payment-success .success-total{font-size:26px;font-weight:900;color:var(--blue);}
-.payment-success p{font-size:13px;color:var(--text-light);}
-.stars-section{margin-top:8px;text-align:center;}
-.stars-title{font-size:13px;font-weight:600;color:var(--text-light);margin-bottom:10px;}
-.stars-row{display:flex;justify-content:center;gap:4px;}
-.star-btn{background:none;border:none;cursor:pointer;font-size:40px;color:#d1d5db;transition:color .15s,transform .15s;padding:2px;-webkit-text-stroke:1.5px #9ca3af;}
-.star-btn:hover{transform:scale(1.15);}
-.star-btn.active{color:var(--gold);-webkit-text-stroke:1.5px #d97706;}
-.stars-row.locked .star-btn{cursor:default;pointer-events:none;}
-.stars-thanks{font-size:12px;font-weight:600;color:var(--green);margin-top:10px;display:none;}
-.stars-thanks.visible{display:block;}
-/* Thank you final screen */
-.payment-thankyou .ty-emoji{font-size:56px;margin-bottom:8px;}
-.payment-thankyou h3{font-size:22px;font-weight:800;color:var(--blue);}
-.payment-thankyou p{font-size:14px;color:var(--text-lighter);}
+.payment-processing,.payment-success,.payment-thankyou{display:none;flex-direction:column;align-items:center;gap:14px;}.payment-processing.active,.payment-success.active,.payment-thankyou.active{display:flex;}.payment-processing p{font-size:16px;font-weight:600;color:var(--text);}
+.payment-success .check-circle{width:60px;height:60px;border-radius:50%;background:var(--green-bg);display:flex;align-items:center;justify-content:center;}.payment-success .check-circle svg{color:var(--green);width:30px;height:30px;}.payment-success h3{font-size:19px;font-weight:800;color:var(--text);}.success-savings{font-size:13px;font-weight:700;color:var(--red);background:var(--red-soft);padding:5px 14px;border-radius:16px;}.payment-success .success-total{font-size:26px;font-weight:900;color:var(--blue);}.payment-success p{font-size:13px;color:var(--text-light);}
+.stars-section{margin-top:8px;text-align:center;}.stars-title{font-size:13px;font-weight:600;color:var(--text-light);margin-bottom:10px;}.stars-row{display:flex;justify-content:center;gap:4px;}.star-btn{background:none;border:none;cursor:pointer;font-size:40px;color:#d1d5db;transition:color .15s,transform .15s;padding:2px;-webkit-text-stroke:1.5px #9ca3af;}.star-btn:hover{transform:scale(1.15);}.star-btn.active{color:var(--gold);-webkit-text-stroke:1.5px #d97706;}.stars-row.locked .star-btn{cursor:default;pointer-events:none;}.stars-thanks{font-size:12px;font-weight:600;color:var(--green);margin-top:10px;display:none;}.stars-thanks.visible{display:block;}
+.payment-thankyou .ty-emoji{font-size:56px;margin-bottom:8px;}.payment-thankyou h3{font-size:22px;font-weight:800;color:var(--blue);}.payment-thankyou p{font-size:14px;color:var(--text-lighter);}
 
 /* TOAST */
-.toast-container{position:fixed;top:16px;right:16px;z-index:600;display:flex;flex-direction:column;gap:8px;max-width:400px;}
-.toast{background:var(--white);padding:12px 18px;border-radius:var(--radius);box-shadow:var(--shadow-lg);font-size:12px;font-weight:600;display:flex;align-items:center;gap:8px;animation:slideInRight .35s ease,fadeOut .4s ease 3.5s forwards;border-left:4px solid var(--green);color:var(--text);line-height:1.4;}
-.toast.blue{border-left-color:var(--blue);}.toast.orange{border-left-color:var(--orange);}.toast.red{border-left-color:var(--red);}
-.toast.long{animation:slideInRight .35s ease,fadeOut .4s ease 5s forwards;}
-.sound-hint{position:fixed;bottom:14px;right:14px;background:var(--white);color:var(--text-light);font-size:11px;font-weight:500;padding:8px 13px;border-radius:18px;box-shadow:var(--shadow-md);display:flex;align-items:center;gap:6px;z-index:50;cursor:pointer;animation:fadeIn .5s ease;transition:opacity .4s,transform .4s;}
-.sound-hint.hidden{opacity:0;transform:translateY(10px);pointer-events:none;}
+.toast-container{position:fixed;top:16px;right:16px;z-index:600;display:flex;flex-direction:column;gap:8px;max-width:400px;}.toast{background:var(--white);padding:12px 18px;border-radius:var(--radius);box-shadow:var(--shadow-lg);font-size:12px;font-weight:600;display:flex;align-items:center;gap:8px;animation:slideInRight .35s ease,fadeOut .4s ease 3.5s forwards;border-left:4px solid var(--green);color:var(--text);line-height:1.4;}.toast.blue{border-left-color:var(--blue);}.toast.orange{border-left-color:var(--orange);}.toast.red{border-left-color:var(--red);}.toast.long{animation:slideInRight .35s ease,fadeOut .4s ease 5s forwards;}
+.sound-hint{position:fixed;bottom:14px;right:14px;background:var(--white);color:var(--text-light);font-size:11px;font-weight:500;padding:8px 13px;border-radius:18px;box-shadow:var(--shadow-md);display:flex;align-items:center;gap:6px;z-index:50;cursor:pointer;animation:fadeIn .5s ease;transition:opacity .4s,transform .4s;}.sound-hint.hidden{opacity:0;transform:translateY(10px);pointer-events:none;}
 
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 @keyframes fadeInUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
@@ -265,26 +151,18 @@ html,body{height:100%;width:100%;overflow:hidden;font-family:'Inter','Segoe UI',
 </style>
 </head>
 <body>
-<input type="text" id="scannerInput" autocomplete="off" autofocus>
+
+<!-- Two separate hidden inputs: one for DNI login, one for product scanning -->
+<input type="text" id="dniInput" class="hidden-input" autocomplete="off">
+<input type="text" id="scannerInput" class="hidden-input" autocomplete="off">
+
 <div class="weight-lockdown" id="weightLockdown"><div class="lockdown-box"><div class="lockdown-icon">⚠️</div><h2>DISCREPANCIA DE PESO DETECTADA</h2><p>Por favor, reubique el último producto en el changuito o aguarde a un asistente.</p><div class="lockdown-weights"><div class="lw"><div class="lw-label">Peso esperado</div><div class="lw-val" id="lwExpected">0 g</div></div><div class="lw"><div class="lw-label">Peso detectado</div><div class="lw-val red" id="lwDetected">0 g</div></div></div><button class="btn-fix-weight" onclick="resolveWeight()">✓ Producto reubicado</button></div></div>
 
-<!-- LOCK SCREEN — DNI only -->
 <div class="lock-screen" id="lockScreen">
-  <div class="lock-inner lock-sub active" id="lockMain">
-    <img class="lock-logo" src="https://raw.githubusercontent.com/TheRock1111/Smart-Cart/main/logo_carrefour.jpg.jpg" alt="Carrefour">
-    <div class="lock-title">Bienvenido/a a Smart Cart</div>
-    <div class="lock-subtitle">Escaneá tu DNI para comenzar tu compra</div>
-    <button class="btn-lock btn-lock-secondary" onclick="showLockSub('dni')">🪪 Escanear mi DNI</button>
-  </div>
-  <div class="lock-inner lock-sub" id="lockDni">
-    <div class="sub-icon scanning"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="7" y1="9" x2="17" y2="9"/><line x1="7" y1="13" x2="13" y2="13"/><circle cx="15.5" cy="15" r="1.5"/></svg></div>
-    <div class="sub-text">Escaneá el código de barras del frente de tu DNI</div>
-    <div class="sub-hint">Pasá tu DNI por el escáner inferior del changuito</div>
-    <button class="btn-back" onclick="showLockSub('main')">← Volver</button>
-  </div>
+  <div class="lock-inner lock-sub active" id="lockMain"><img class="lock-logo" src="https://raw.githubusercontent.com/TheRock1111/Smart-Cart/main/logo_carrefour.jpg.jpg" alt="Carrefour"><div class="lock-title">Bienvenido/a a Smart Cart</div><div class="lock-subtitle">Escaneá tu DNI para comenzar tu compra</div><button class="btn-lock btn-lock-secondary" onclick="activateDniScan()">🪪 Escanear mi DNI</button></div>
+  <div class="lock-inner lock-sub" id="lockDni"><div class="sub-icon scanning"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="7" y1="9" x2="17" y2="9"/><line x1="7" y1="13" x2="13" y2="13"/><circle cx="15.5" cy="15" r="1.5"/></svg></div><div class="sub-text">Escaneá el código del frente de tu DNI</div><div class="sub-hint">Pasá tu DNI por el escáner del changuito</div><button class="btn-back" onclick="showLockMain()">← Volver</button></div>
 </div>
 
-<!-- MAIN APP -->
 <div class="app">
   <div class="panel-left">
     <div class="panel-header"><div class="header-inner"><div class="logo-wrap"><img src="https://raw.githubusercontent.com/TheRock1111/Smart-Cart/main/logo_carrefour.jpg.jpg" alt="Carrefour"></div><div class="subtitle">Smart Cart by GJCK</div></div></div>
@@ -295,12 +173,13 @@ html,body{height:100%;width:100%;overflow:hidden;font-family:'Inter','Segoe UI',
     <div class="security-cam"><div class="cam-video-wrap"><video id="camVideo" autoplay muted playsinline></video></div><div class="cam-info"><div class="cam-dot-row"><div class="cam-dot"></div><span class="cam-rec">REC</span></div><div class="cam-surveillance">Vigilancia activa por IA y sensores de peso</div></div></div>
     <div class="state state-idle active" id="stateIdle"><div class="idle-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7V1h20v6"/><path d="M2 17v6h20v-6"/><line x1="7" y1="12" x2="7.01" y2="12"/><line x1="12" y1="12" x2="12.01" y2="12"/><line x1="17" y1="12" x2="17.01" y2="12"/></svg></div><div class="idle-text">Escaneá tu producto para comenzar</div><div class="idle-hint">El escáner detectará el código automáticamente</div></div>
     <div class="state state-scan" id="stateScan"><img class="product-image" id="scanImg" src="" alt=""><div class="product-name" id="scanName"></div><div class="product-price" id="scanPrice"></div><div class="scan-badge" id="scanBadge">✓ Agregado</div></div>
-    <div class="state state-offer" id="stateOffer"><div class="offer-banner">✨ 20% OFF en Huevos de Pascua Seleccionados ✨</div><div class="offer-grid"><div class="offer-card"><img src="https://carrefourar.vtexassets.com/arquivos/ids/275990-1600-auto?v=638127618709730000&width=1600&height=auto&aspect=true" alt=""><div class="offer-product-name">Huevo Mantecol 200 g</div><div class="price-original">$24.689</div><div class="price-offer">$19.751,20</div><div class="offer-scan-hint">Escaneá el código para aplicar</div></div><div class="offer-card"><img src="https://carrefourar.vtexassets.com/arquivos/ids/799977-800-auto?v=639064388465430000&width=800&height=auto&aspect=true" alt=""><div class="offer-product-name">Huevo Nugaton 91 g</div><div class="price-original">$8.280</div><div class="price-offer">$6.624</div><div class="offer-scan-hint">Escaneá el código para aplicar</div></div><div class="offer-card"><img src="https://carrefourar.vtexassets.com/arquivos/ids/476836-800-auto?v=638440339847130000&width=800&height=auto&aspect=true" alt=""><div class="offer-product-name">Huevo Cofler Block 56 g</div><div class="price-original">$8.280</div><div class="price-offer">$6.624</div><div class="offer-scan-hint">Escaneá el código para aplicar</div></div></div><button class="btn-close-offer" id="btnCloseOffer">Cerrar oferta</button></div>
+    <div class="state state-offer" id="stateOffer"><div class="offer-banner">✨ 20% OFF en Huevos de Pascua Seleccionados ✨</div><div class="offer-grid"><div class="offer-card"><img src="https://carrefourar.vtexassets.com/arquivos/ids/275990-1600-auto?v=638127618709730000&width=1600&height=auto&aspect=true" alt=""><div class="offer-product-name">Huevo Mantecol 200 g</div><div class="price-original">$24.689</div><div class="price-offer">$19.751,20</div><div class="offer-scan-hint">Escaneá el código</div></div><div class="offer-card"><img src="https://carrefourar.vtexassets.com/arquivos/ids/799977-800-auto?v=639064388465430000&width=800&height=auto&aspect=true" alt=""><div class="offer-product-name">Huevo Nugaton 91 g</div><div class="price-original">$8.280</div><div class="price-offer">$6.624</div><div class="offer-scan-hint">Escaneá el código</div></div><div class="offer-card"><img src="https://carrefourar.vtexassets.com/arquivos/ids/476836-800-auto?v=638440339847130000&width=800&height=auto&aspect=true" alt=""><div class="offer-product-name">Huevo Cofler Block 56 g</div><div class="price-original">$8.280</div><div class="price-offer">$6.624</div><div class="offer-scan-hint">Escaneá el código</div></div></div><button class="btn-close-offer" id="btnCloseOffer">Cerrar oferta</button></div>
     <div class="floating-toolbar"><button class="tb-btn" onclick="openFruits()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20.94c1.5 0 6-2.01 6-8.94A6.96 6.96 0 0 0 12 5a6.96 6.96 0 0 0-6 6.94c0 6.98 4.5 9 6 9z"/><path d="M12 5c0-1.5.5-3 2-4"/><path d="M10 5c-.5-.5-1.5-1-3-1"/></svg>Frutas y Verduras</button><button class="tb-btn" onclick="openMap()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="3" x2="9" y2="21"/></svg>Mapa</button><button class="tb-btn" onclick="openCoupons()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>Mis Cupones</button><button class="tb-btn help-btn" onclick="callAssistance()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>Ayuda</button></div>
   </div>
 </div>
+
 <div class="modal-overlay" id="modalRemove"><div class="modal-box"><div class="spinner"></div><p>Retirá el producto del changuito...</p><span class="modal-hint">Confirmando retiro</span></div></div>
-<div class="review-overlay" id="modalReview"><div class="review-box" id="reviewBox"><div id="reviewAudit" style="text-align:center;padding:30px 0;"><div class="spinner" style="margin:0 auto 16px;"></div><p style="font-size:15px;font-weight:600;color:var(--text);">Sincronizando balanza y verificando productos...</p><span style="font-size:11px;color:var(--text-lighter);">Esto solo toma unos segundos</span></div><div id="reviewContent" style="display:none;"><h2>🛒 Resumen de tu Compra</h2><div class="review-hint" id="reviewCount"></div><div class="review-list" id="reviewList"></div><div class="review-footer"><div class="review-savings" id="reviewSavings" style="display:none;"></div><div class="review-total" id="reviewTotal"></div><div class="review-buttons"><button class="btn-keep-shopping" onclick="closeReview()">Seguir Comprando</button><button class="btn-confirm-pay" onclick="confirmAndPay()">Confirmar y Pagar</button></div></div></div></div></div>
+<div class="review-overlay" id="modalReview"><div class="review-box"><div id="reviewAudit" style="text-align:center;padding:30px 0;"><div class="spinner" style="margin:0 auto 16px;"></div><p style="font-size:15px;font-weight:600;">Sincronizando balanza y verificando productos...</p><span style="font-size:11px;color:var(--text-lighter);">Esto solo toma unos segundos</span></div><div id="reviewContent" style="display:none;"><h2>🛒 Resumen de tu Compra</h2><div class="review-hint" id="reviewCount"></div><div class="review-list" id="reviewList"></div><div class="review-footer"><div class="review-savings" id="reviewSavings" style="display:none;"></div><div class="review-total" id="reviewTotal"></div><div class="review-buttons"><button class="btn-keep-shopping" onclick="closeReview()">Seguir Comprando</button><button class="btn-confirm-pay" onclick="confirmAndPay()">Confirmar y Pagar</button></div></div></div></div></div>
 <div class="fruits-overlay" id="modalFruits"><div class="fruits-box"><h2>🍎 Frutas y Verduras</h2><div class="fruits-scan-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 7h.01"/><path d="M7 12h10"/><path d="M7 17h.01"/></svg></div><div class="fruits-hint">Escaneá el ticket de la balanza del sector</div><div class="fruits-sub-hint">Pesá tu producto en la balanza y escaneá el ticket generado</div><button class="btn-close-modal" onclick="closeFruits()">Cerrar</button></div></div>
 <div class="map-overlay" id="modalMap"><div class="map-box"><h2>📍 Mapa de Tienda</h2><div class="map-hint">Tu ubicación en tiempo real</div><div class="store-map"><div class="aisle" style="left:5%;top:10%;width:25%;height:14%;">Panadería</div><div class="aisle" style="left:5%;top:30%;width:25%;height:14%;">Lácteos</div><div class="aisle" style="left:5%;top:50%;width:25%;height:14%;">Carnes</div><div class="aisle" style="left:5%;top:70%;width:25%;height:14%;">Frutas</div><div class="aisle" style="left:38%;top:10%;width:12%;height:54%;">Góndola 1</div><div class="aisle" style="left:55%;top:10%;width:12%;height:54%;">Góndola 2</div><div class="aisle" style="left:72%;top:10%;width:12%;height:54%;">Góndola 3</div><div class="aisle" style="left:38%;top:72%;width:46%;height:14%;">Bebidas</div><div class="section-label" style="right:5%;top:4%;">ENTRADA</div><div class="section-label" style="right:5%;bottom:4%;">CAJAS</div><div class="map-dot" id="mapDot" style="left:88%;top:8%;"></div></div><div class="map-legend"><div class="dot-red"></div> Tu ubicación</div><button class="btn-close-modal" onclick="closeMap()">Cerrar</button></div></div>
 <div class="coupons-overlay" id="modalCoupons"><div class="coupons-box"><h2>🏷️ Mis Cupones Mi Carrefour</h2><div class="coupons-hint" id="couponsHint"></div><div id="couponsContent"></div><button class="btn-close-modal" onclick="closeCoupons()">Cerrar</button></div></div>
@@ -323,20 +202,145 @@ const PRODUCTS={
   '6':{name:'Huevo Nugaton 91g (Promo 20%)',price:6624,originalPrice:8280,weight:100,img:'https://carrefourar.vtexassets.com/arquivos/ids/799977-800-auto?v=639064388465430000&width=800&height=auto&aspect=true',promo:true},
   '7':{name:'Huevo Cofler Block 56g (Promo 20%)',price:6624,originalPrice:8280,weight:65,img:'https://carrefourar.vtexassets.com/arquivos/ids/476836-800-auto?v=638440339847130000&width=800&height=auto&aspect=true',promo:true},
 };
-let cart={},fruitCart={},scanTimeout=null,isLocked=true,lockSub='main',isSocio=false,weightLocked=false,fruitsModalOpen=false,mapInterval=null;
 const $=id=>document.getElementById(id);
+let cart={},fruitCart={},scanTimeout=null,isLocked=true,weightLocked=false,fruitsModalOpen=false,mapInterval=null,dniScanActive=false;
+
+// ═══ DNI PARSER v20 ═══
+// Cadenas reales:
+//   ROCA:   00702200540ROCAGABRIEL ALEJANDROM47513813A31/07/200615/03/2023239
+//   LANATA: 00347994056LANATAVALERIA VICTORIAF31375547A16/01/198503/03/2015274
+// Estructura: [dígitos][APELLIDONOMBRE SEGUNDO_NOMBRE][M|F][DNI 7-8 dígitos][resto]
+
+function parseDNI(raw){
+  const s=raw.trim();
+
+  // FORMAT 1: con separador @ (escáneres 2D estándar)
+  if(s.includes('@')){
+    const parts=s.split('@');
+    if(parts.length>=3){
+      const fullName=(parts[2]||parts[1]||'').trim();
+      const firstName=fullName.split(/\s+/)[0];
+      const genero=(parts[3]||'M').trim().charAt(0).toUpperCase();
+      return{nombre:capitalize(firstName),genero};
+    }
+  }
+
+  // FORMAT 2: cadena continua sin separadores
+  const cleaned=s.replace(/^\d+/,'');
+  // Regex: bloque de letras+espacios, luego (M|F) pegado a DNI de 7-8 dígitos
+  const match=cleaned.match(/^([A-ZÁÉÍÓÚÑ][A-ZÁÉÍÓÚÑ\s]+)(M|F)(\d{7,8})/);
+  if(!match) return{nombre:'Cliente',genero:'M'};
+
+  const nameBlock=match[1]; // "LANATAVALERIA VICTORIA" o "ROCAGABRIEL ALEJANDRO"
+  const genero=match[2];     // "F" o "M"
+
+  const spaceIndex=nameBlock.indexOf(' ');
+  if(spaceIndex===-1) return{nombre:capitalize(nameBlock),genero};
+
+  const beforeSpace=nameBlock.substring(0,spaceIndex);  // "LANATAVALERIA" o "ROCAGABRIEL"
+  const afterSpace=nameBlock.substring(spaceIndex+1).trim().split(/\s+/)[0]; // "VICTORIA" o "ALEJANDRO"
+
+  // Diccionario amplio de nombres argentinos
+  const N=['ABEL','ABRIL','ADRIANA','ADRIAN','AGUSTIN','AGUSTINA','AIDA','ALAN','ALBA','ALBERTO','ALEJANDRA','ALEJANDRO','ALEXIS','ALFREDO','ALICIA','AMANDA','AMELIA','ANA','ANALIA','ANDREA','ANDRES','ANGEL','ANGELA','ANSELMO','ANTONIO','ARIEL','AYLEN','BEATRIZ','BELEN','BENJAMIN','BERNARDO','BRENDA','BRIAN','BRUNO','CAMILA','CARLA','CARLOS','CARMEN','CAROLINA','CECILIA','CELESTE','CESAR','CLAUDIA','CLAUDIO','CONSTANZA','CRISTIAN','CRISTINA','DAMIAN','DANIELA','DANIEL','DARIO','DAVID','DEBORA','DELFINA','DIEGO','DOLORES','DOMINGO','EDUARDO','ELENA','ELIANA','ELIAS','ELSA','EMILIANO','EMILIO','EMMA','ENRIQUE','ERICA','ERNESTO','ESTEBAN','EUGENIA','EUGENIO','EVA','EZEQUIEL','FABIAN','FACUNDO','FATIMA','FEDERICO','FELIPE','FERNANDA','FERNANDO','FLAVIA','FLORENCIA','FRANCO','FRANCISCO','GABRIEL','GABRIELA','GASTON','GERMAN','GERARDO','GIMENA','GLADYS','GONZALO','GRACIELA','GUADALUPE','GUILLERMO','GUSTAVO','HECTOR','HERNAN','HORACIO','HUGO','HUMBERTO','IGNACIO','INES','IRENE','IRIS','ISAAC','ISABEL','ISAIAS','ISMAEL','IVAN','JACINTO','JAZMIN','JESSICA','JESUS','JOAQUIN','JONATHAN','JORGE','JOSEFINA','JOSE','JUANA','JUAN','JULIA','JULIAN','JULIANA','JULIETA','JULIO','KAREN','KARINA','KEVIN','LARA','LAURA','LAUTARO','LEANDRO','LEONARDO','LIDIA','LILIAN','LILIANA','LIONEL','LORENA','LUCAS','LUCIA','LUCIANA','LUCIANO','LUCRECIA','LUIS','LUISA','LUZ','MAGDALENA','MANUEL','MARCELA','MARCELO','MARCOS','MARGARITA','MARIANA','MARIANO','MARIELA','MARIO','MARTA','MARTIN','MATEO','MATIAS','MAURO','MAXIMILIANO','MICAELA','MIGUEL','MILAGROS','MIRIAM','MIRTA','MOISES','MONICA','MORENA','NAHUEL','NATALIO','NATALIA','NAZARENO','NESTOR','NICOLAS','NOELIA','NORA','NORMA','OCTAVIO','OLGA','OMAR','ORLANDO','OSCAR','OSVALDO','PABLO','PAMELA','PATRICIA','PATRICIO','PAULA','PEDRO','PILAR','RAFAEL','RAMIRO','RAMON','RAQUEL','RAUL','RENATA','RICARDO','RITA','ROBERTO','ROCIO','RODRIGO','ROMINA','ROSA','ROSARIO','ROXANA','RUBEN','RUTH','SABRINA','SAMUEL','SANTIAGO','SARA','SEBASTIAN','SERGIO','SILVIA','SILVINA','SIMON','SOFIA','SOLEDAD','SONIA','STELLA','SUSANA','TAMARA','TOMAS','TRINIDAD','URSULA','VALENTIN','VALENTINA','VALERIA','VANESA','VANINA','VERONICA','VICTORIA','VIOLETA','VIRGINIA','VIVIANA','WALTER','YAMILA','YANINA'];
+
+  // ESTRATEGIA DE DOBLE COMPROBACIÓN:
+  // 1) Buscar el primer nombre dentro del bloque pegado (beforeSpace)
+  //    probando cada punto de corte y verificando contra el diccionario
+  // 2) Si no se encuentra, usar el afterSpace como fallback
+  let firstName='';
+
+  // Búsqueda en beforeSpace: "LANATAVALERIA" → probar cortes hasta encontrar un nombre
+  for(let i=1;i<beforeSpace.length-2;i++){
+    const candidate=beforeSpace.substring(i);
+    if(N.includes(candidate)){firstName=candidate;break;}
+  }
+
+  // Si no encontró en beforeSpace, buscar en afterSpace como respaldo
+  if(!firstName){
+    if(N.includes(afterSpace)){firstName=afterSpace;}
+    else{
+      // Último recurso: corte heurístico del bloque pegado (apellido 3-6 letras)
+      for(let sl=3;sl<=Math.min(8,beforeSpace.length-3);sl++){
+        const nm=beforeSpace.substring(sl);
+        if(nm.length>=3&&nm.length<=12){firstName=nm;break;}
+      }
+    }
+  }
+
+  if(!firstName) firstName=beforeSpace;
+  return{nombre:capitalize(firstName),genero};
+}
+
+function capitalize(str){
+  return str.charAt(0).toUpperCase()+str.slice(1).toLowerCase();
+}
+
+// ═══ LOCK SCREEN ═══
+function showLockMain(){
+  dniScanActive=false;
+  $('lockMain').classList.add('active');
+  $('lockDni').classList.remove('active');
+}
+
+function activateDniScan(){
+  dniScanActive=true;
+  $('lockMain').classList.remove('active');
+  $('lockDni').classList.add('active');
+  // Focus the DNI input for scanner
+  const di=$('dniInput');
+  di.value='';
+  di.focus();
+  // Keep focus on DNI input while on this screen
+  clearInterval(window._dniFocusInterval);
+  window._dniFocusInterval=setInterval(()=>{
+    if(dniScanActive&&document.activeElement!==di) di.focus();
+  },200);
+}
+
+function processDNI(rawData){
+  const{nombre,genero}=parseDNI(rawData);
+  // Save to sessionStorage
+  sessionStorage.setItem('clienteNombre',nombre);
+  sessionStorage.setItem('clienteGenero',genero);
+  sessionStorage.setItem('clienteDNIRaw',rawData);
+  // Unlock
+  dniScanActive=false;
+  clearInterval(window._dniFocusInterval);
+  isLocked=false;
+  const saludo=genero==='F'?'Bienvenida':'Bienvenido';
+  $('lockScreen').classList.add('dismissed');
+  setTimeout(()=>$('lockScreen').style.display='none',600);
+  playScanBeep();
+  showToast(`👤 Identidad validada. ${saludo}, ${nombre}. Tu compra segura está siendo monitoreada.`,'',true);
+  initCamera();
+  startProductScanning();
+}
+
+function startProductScanning(){
+  // Now focus the product scanner input
+  const si=$('scannerInput');
+  si.focus();
+}
+
+// DNI input listener — captures full barcode string on Enter
+$('dniInput').addEventListener('keydown',e=>{
+  if(e.key==='Enter'){
+    e.preventDefault();
+    const val=$('dniInput').value.trim();
+    $('dniInput').value='';
+    if(val.length>=10){processDNI(val);}
+  }
+});
 
 // ═══ FULL RESET ═══
 function fullReset(){
-  cart={};fruitCart={};isLocked=true;lockSub='main';isSocio=false;weightLocked=false;
-  renderCart();showState(stateIdle);
-  // Reset lock screen
-  lockScreen.style.display='';lockScreen.classList.remove('dismissed');
-  showLockSub('main');
-  // Close any open modals
+  cart={};fruitCart={};isLocked=true;weightLocked=false;dniScanActive=false;
+  sessionStorage.clear();
+  renderCart();showState($('stateIdle'));
+  $('lockScreen').style.display='';$('lockScreen').classList.remove('dismissed');
+  showLockMain();
   document.querySelectorAll('[class*="overlay"]').forEach(el=>el.classList.remove('active'));
   $('weightLockdown').classList.remove('active');
-  keepFocus();
 }
 
 // ═══ WEIGHT ═══
@@ -353,16 +357,17 @@ function playScanBeep(){if(!audioCtx||!audioReady)return;try{if(audioCtx.state==
 function playOfferBeep(){if(!audioCtx||!audioReady)return;try{if(audioCtx.state==='suspended')audioCtx.resume();const t=audioCtx.currentTime;[880,1100,1320].forEach((f,i)=>{const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.connect(g);g.connect(audioCtx.destination);o.type='sine';o.frequency.setValueAtTime(f,t+i*.09);g.gain.setValueAtTime(.13,t+i*.09);g.gain.exponentialRampToValueAtTime(.001,t+i*.09+.12);o.start(t+i*.09);o.stop(t+i*.09+.12);});}catch(e){}}
 function playSuccessChime(){if(!audioCtx||!audioReady)return;try{if(audioCtx.state==='suspended')audioCtx.resume();const t=audioCtx.currentTime;[{f:783.99,s:0,d:.18,v:.14,tp:'sine'},{f:1046.50,s:.15,d:.35,v:.13,tp:'sine'},{f:783.99,s:0,d:.18,v:.06,tp:'triangle'},{f:1046.50,s:.15,d:.35,v:.05,tp:'triangle'}].forEach(n=>{const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.connect(g);g.connect(audioCtx.destination);o.type=n.tp;o.frequency.setValueAtTime(n.f,t+n.s);g.gain.setValueAtTime(0,t+n.s);g.gain.linearRampToValueAtTime(n.v,t+n.s+.02);g.gain.exponentialRampToValueAtTime(.001,t+n.s+n.d);o.start(t+n.s);o.stop(t+n.s+n.d+.05);});}catch(e){}}
 
-// ═══ DOM ═══
-const scannerInput=$('scannerInput'),cartItemsEl=$('cartItems'),cartEmptyEl=$('cartEmpty');
+// ═══ HELPERS ═══
+const scannerInput=$('scannerInput');
+const cartItemsEl=$('cartItems'),cartEmptyEl=$('cartEmpty');
 const totalValueEl=$('totalValue'),itemsCountEl=$('itemsCount'),savingsRow=$('savingsRow'),savingsValue=$('savingsValue');
 const stateIdle=$('stateIdle'),stateScan=$('stateScan'),stateOffer=$('stateOffer');
 const scanImg=$('scanImg'),scanName=$('scanName'),scanPrice=$('scanPrice'),scanBadge=$('scanBadge');
-const modalRemove=$('modalRemove'),toastContainer=$('toastContainer'),lockScreen=$('lockScreen');
+const modalRemove=$('modalRemove'),toastContainer=$('toastContainer');
 const modalPayment=$('modalPayment'),paymentTotal=$('paymentTotal'),payStep1=$('payStep1'),payStep2=$('payStep2'),payStep3=$('payStep3');
 const successTotal=$('successTotal'),successSavings=$('successSavings');
 
-function keepFocus(){if(weightLocked)return;if(document.activeElement!==scannerInput&&!document.querySelector('[class*="overlay"].active'))scannerInput.focus();}
+function keepFocus(){if(isLocked||weightLocked)return;if(document.activeElement!==scannerInput&&!document.querySelector('[class*="overlay"].active'))scannerInput.focus();}
 setInterval(keepFocus,400);document.addEventListener('click',()=>setTimeout(keepFocus,80));
 
 function fmtPrice(n){return '$'+n.toLocaleString('es-AR',{minimumFractionDigits:n%1!==0?2:0,maximumFractionDigits:2});}
@@ -372,29 +377,15 @@ function getTotalItems(){let c=Object.values(cart).reduce((s,q)=>s+q,0);Object.v
 function getTotalPrice(){let t=Object.entries(cart).reduce((s,[c,q])=>s+(PRODUCTS[c].price*q),0);Object.values(fruitCart).forEach(f=>t+=f.total);return t;}
 function getTotalSavings(){return Object.entries(cart).reduce((s,[c,q])=>{const p=PRODUCTS[c];return s+(p.promo&&p.originalPrice?(p.originalPrice-p.price)*q:0);},0);}
 function updateTotals(){totalValueEl.textContent=fmtPrice(getTotalPrice());const c=getTotalItems();itemsCountEl.textContent=c===1?'1 producto':c+' productos';const sav=getTotalSavings();if(sav>0){savingsRow.classList.add('visible');savingsValue.textContent=fmtPrice(sav);}else savingsRow.classList.remove('visible');}
-
-// ═══ LOCK (DNI only) ═══
-function showLockSub(sub){lockSub=sub;['lockMain','lockDni'].forEach(id=>$(id).classList.remove('active'));$({main:'lockMain',dni:'lockDni'}[sub]).classList.add('active');}
-function unlock(msg){isLocked=false;isSocio=false;lockScreen.classList.add('dismissed');setTimeout(()=>lockScreen.style.display='none',600);playScanBeep();showToast(msg,'',true);initCamera();}
-function handleLoginScan(code){
-  if(lockSub==='dni'){
-    if(code==='999M'){unlock('👤 Identidad validada. Bienvenido, Gabriel. Tu compra segura está siendo monitoreada.');return true;}
-    if(code==='999F'){unlock('👤 Identidad validada. Bienvenida, Sofía. Tu compra segura está siendo monitoreada.');return true;}
-  }return false;
-}
 function initCamera(){try{navigator.mediaDevices.getUserMedia({video:{facingMode:'user',width:120,height:120}}).then(s=>{$('camVideo').srcObject=s;}).catch(()=>{});}catch(e){}}
 
 // ═══ CART ═══
 function getAllEntries(){return[...Object.keys(cart).map(c=>({type:'product',code:c,qty:cart[c],p:PRODUCTS[c],lineTotal:PRODUCTS[c].price*cart[c]})).filter(e=>e.qty>0),...Object.entries(fruitCart).map(([id,f])=>({type:'fruit',code:id,qty:f.qty,p:{name:f.name,price:f.total/f.qty,img:null,promo:false},lineTotal:f.total})).filter(e=>e.qty>0)];}
-function renderCart(){
-  cartItemsEl.querySelectorAll('.cart-item').forEach(el=>el.remove());
-  const entries=getAllEntries();
-  if(!entries.length){cartEmptyEl.style.display='flex';}else{cartEmptyEl.style.display='none';entries.forEach(({type,code,qty,p,lineTotal})=>{const d=document.createElement('div');d.className='cart-item'+(p.promo?' promo':'')+(type==='fruit'?' fruit':'');d.innerHTML=`<div class="item-qty-badge">${qty}</div><div class="item-info"><div class="item-name">${p.name}</div>${qty>1?`<div class="item-unit-price">${fmtPrice(lineTotal/qty)} c/u</div>`:''}</div><div class="item-price">${fmtPrice(lineTotal)}</div><button class="item-delete" onclick="removeItem('${code}','${type}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg></button>`;cartItemsEl.appendChild(d);});}updateTotals();
-}
+function renderCart(){cartItemsEl.querySelectorAll('.cart-item').forEach(el=>el.remove());const entries=getAllEntries();if(!entries.length){cartEmptyEl.style.display='flex';}else{cartEmptyEl.style.display='none';entries.forEach(({type,code,qty,p,lineTotal})=>{const d=document.createElement('div');d.className='cart-item'+(p.promo?' promo':'')+(type==='fruit'?' fruit':'');d.innerHTML=`<div class="item-qty-badge">${qty}</div><div class="item-info"><div class="item-name">${p.name}</div>${qty>1?`<div class="item-unit-price">${fmtPrice(lineTotal/qty)} c/u</div>`:''}</div><div class="item-price">${fmtPrice(lineTotal)}</div><button class="item-delete" onclick="removeItem('${code}','${type}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg></button>`;cartItemsEl.appendChild(d);});}updateTotals();}
 function addProduct(code){if(weightLocked)return;const p=PRODUCTS[code];if(!p)return;cart[code]=(cart[code]||0)+1;renderCart();playScanBeep();if(scanTimeout)clearTimeout(scanTimeout);scanImg.src=p.img;scanName.textContent=p.name;scanPrice.textContent=fmtPrice(p.price);if(p.promo){scanBadge.className='scan-badge promo';scanBadge.textContent='🏷️ ¡Descuento aplicado!';}else{scanBadge.className='scan-badge';scanBadge.textContent='✓ Agregado al changuito';}showState(stateScan);scanTimeout=setTimeout(()=>showState(stateIdle),4000);setTimeout(checkWeight,1500);}
 function removeItem(code,type){modalRemove.classList.add('active');setTimeout(()=>{if(type==='fruit'){delete fruitCart[code];}else{if(cart[code]>1)cart[code]--;else delete cart[code];}renderCart();modalRemove.classList.remove('active');showToast('✓ Producto retirado');keepFocus();},2000);}
 
-// ═══ FRUITS (ticket scan) ═══
+// ═══ FRUITS ═══
 function openFruits(){fruitsModalOpen=true;$('modalFruits').classList.add('active');}
 function closeFruits(){fruitsModalOpen=false;$('modalFruits').classList.remove('active');keepFocus();}
 function handleFruitScan(){const names=['Banana','Manzana Roja','Tomate','Naranja','Papa','Cebolla'];const name=names[Math.floor(Math.random()*names.length)];const weight=Math.floor(Math.random()*1500)+200;const priceKg=Math.floor(Math.random()*2000)+800;const total=Math.round(priceKg*weight/1000);fruitCart['fq_'+Date.now()]={name:name+' ('+weight+'g)',total,qty:1,weight};renderCart();playScanBeep();closeFruits();showToast(`✓ ${name} — ${weight}g — ${fmtPrice(total)}`);}
@@ -407,13 +398,7 @@ function moveMapDot(){const p=mapPath[mapStep%mapPath.length];$('mapDot').style.
 function closeMap(){$('modalMap').classList.remove('active');clearInterval(mapInterval);keepFocus();}
 
 // ═══ COUPONS ═══
-function openCoupons(){
-  const cont=$('couponsContent');
-  // DNI users see conversion message
-  $('couponsHint').textContent='';
-  cont.innerHTML='<div class="coupons-nosocio"><div class="nosocio-emoji">🔒</div><div class="nosocio-title">¡Ups! Estos beneficios son exclusivos para socios Mi Carrefour</div><div class="nosocio-desc">Registrate en la App para empezar a ahorrar hoy mismo. Descargá Mi Carrefour y accedé a cupones, descuentos y promociones exclusivas.</div></div>';
-  $('modalCoupons').classList.add('active');
-}
+function openCoupons(){const cont=$('couponsContent');$('couponsHint').textContent='';cont.innerHTML='<div class="coupons-nosocio"><div class="nosocio-emoji">🔒</div><div class="nosocio-title">¡Ups! Estos beneficios son exclusivos para socios Mi Carrefour</div><div class="nosocio-desc">Registrate en la App para empezar a ahorrar hoy mismo. Descargá Mi Carrefour y accedé a cupones, descuentos y promociones exclusivas.</div></div>';$('modalCoupons').classList.add('active');}
 function closeCoupons(){$('modalCoupons').classList.remove('active');keepFocus();}
 
 // ═══ ASSISTANCE ═══
@@ -422,18 +407,13 @@ function callAssistance(){showToast('🔔 Asistente notificado. Un colaborador s
 // ═══ KEY O ═══
 window.addEventListener('keydown',e=>{if(e.key==='o'||e.key==='O'){e.preventDefault();e.stopImmediatePropagation();scannerInput.value='';if(!isLocked&&!weightLocked){playOfferBeep();showState(stateOffer);if(scanTimeout)clearTimeout(scanTimeout);}}},true);
 
-// ═══ SCANNER ═══
-scannerInput.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();const code=scannerInput.value.trim();scannerInput.value='';if(!code)return;if(isLocked){handleLoginScan(code);return;}if(weightLocked)return;if(code==='QRFRUTA'&&fruitsModalOpen){handleFruitScan();return;}if(PRODUCTS[code])addProduct(code);}});
+// ═══ PRODUCT SCANNER ═══
+scannerInput.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();const code=scannerInput.value.trim();scannerInput.value='';if(!code||isLocked||weightLocked)return;if(code==='QRFRUTA'&&fruitsModalOpen){handleFruitScan();return;}if(PRODUCTS[code])addProduct(code);}});
 $('btnCloseOffer').addEventListener('click',()=>{showState(stateIdle);keepFocus();});
 
 // ═══ REVIEW ═══
 $('btnCheckout').addEventListener('click',()=>{if(!getTotalItems()||weightLocked)return;$('reviewAudit').style.display='';$('reviewContent').style.display='none';$('modalReview').classList.add('active');setTimeout(()=>{buildReview();$('reviewAudit').style.display='none';$('reviewContent').style.display='';},2000);});
-function buildReview(){
-  const entries=getAllEntries();const list=$('reviewList');list.innerHTML='';
-  entries.forEach(({type,code,qty,p,lineTotal})=>{const saving=type==='product'&&p.promo&&p.originalPrice?(p.originalPrice-p.price)*qty:0;const img=p.img||'';list.innerHTML+=`<div class="review-item">${img?`<img src="${img}" alt="">`:'<div style="width:48px;height:48px;background:var(--green-bg);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:22px;">🥬</div>'}<div class="ri-info"><div class="ri-name">${p.name}</div><div class="ri-qty">Cant: ${qty}</div>${saving>0?`<div class="ri-saving">Ahorrás ${fmtPrice(saving)}</div>`:''}</div><div class="ri-price">${fmtPrice(lineTotal)}</div></div>`;});
-  const sav=getTotalSavings();const rs=$('reviewSavings');if(sav>0){rs.textContent='Ahorro total: '+fmtPrice(sav);rs.style.display='';}else rs.style.display='none';
-  $('reviewTotal').textContent=fmtPrice(getTotalPrice());$('reviewCount').textContent=getTotalItems()+' productos en tu changuito';
-}
+function buildReview(){const entries=getAllEntries();const list=$('reviewList');list.innerHTML='';entries.forEach(({type,code,qty,p,lineTotal})=>{const saving=type==='product'&&p.promo&&p.originalPrice?(p.originalPrice-p.price)*qty:0;const img=p.img||'';list.innerHTML+=`<div class="review-item">${img?`<img src="${img}" alt="">`:'<div style="width:48px;height:48px;background:var(--green-bg);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:22px;">🥬</div>'}<div class="ri-info"><div class="ri-name">${p.name}</div><div class="ri-qty">Cant: ${qty}</div>${saving>0?`<div class="ri-saving">Ahorrás ${fmtPrice(saving)}</div>`:''}</div><div class="ri-price">${fmtPrice(lineTotal)}</div></div>`;});const sav=getTotalSavings();const rs=$('reviewSavings');if(sav>0){rs.textContent='Ahorro total: '+fmtPrice(sav);rs.style.display='';}else rs.style.display='none';$('reviewTotal').textContent=fmtPrice(getTotalPrice());$('reviewCount').textContent=getTotalItems()+' productos en tu changuito';}
 function closeReview(){$('modalReview').classList.remove('active');keepFocus();}
 function confirmAndPay(){closeReview();const total=getTotalPrice(),sav=getTotalSavings();paymentTotal.textContent=fmtPrice(total);successTotal.textContent=fmtPrice(total);if(sav>0){successSavings.textContent='Ahorraste '+fmtPrice(sav);successSavings.style.display='';}else successSavings.style.display='none';resetPay();modalPayment.classList.add('active');}
 
@@ -441,33 +421,15 @@ function confirmAndPay(){closeReview();const total=getTotalPrice(),sav=getTotalS
 function resetPay(){payStep1.style.display='';payStep2.classList.remove('active');payStep3.classList.remove('active');$('payStep4').classList.remove('active');document.querySelectorAll('.payment-option').forEach(o=>o.classList.remove('selected'));resetStars();}
 function selectPayment(el){document.querySelectorAll('.payment-option').forEach(o=>o.classList.remove('selected'));el.classList.add('selected');setTimeout(()=>{payStep1.style.display='none';payStep2.classList.add('active');setTimeout(()=>{payStep2.classList.remove('active');payStep3.classList.add('active');playSuccessChime();},2000);},400);}
 function closePayment(){modalPayment.classList.remove('active');resetPay();keepFocus();}
-function closeSuccess(){modalPayment.classList.remove('active');resetPay();fullReset();}
 
 // ═══ STARS + AUTO-RESET ═══
 function initStars(){const row=$('starsRow');row.innerHTML='';for(let i=1;i<=5;i++){const b=document.createElement('button');b.className='star-btn';b.textContent='★';b.onclick=()=>rateStar(i);row.appendChild(b);}}
-function rateStar(n){
-  const row=$('starsRow');if(row.classList.contains('locked'))return;
-  row.classList.add('locked');
-  document.querySelectorAll('.star-btn').forEach((b,i)=>b.classList.toggle('active',i<n));
-  $('starsThanks').classList.add('visible');
-  enviarFeedback(n);
-  // Auto-reset after 3 seconds: show thank you then go to lock screen
-  setTimeout(()=>{
-    payStep3.classList.remove('active');
-    $('payStep4').classList.add('active');
-    setTimeout(()=>{
-      modalPayment.classList.remove('active');
-      resetPay();fullReset();
-    },3000);
-  },1500);
-}
-function enviarFeedback(stars){console.log('Feedback enviado:',stars,'estrellas');}
+function rateStar(n){const row=$('starsRow');if(row.classList.contains('locked'))return;row.classList.add('locked');document.querySelectorAll('.star-btn').forEach((b,i)=>b.classList.toggle('active',i<n));$('starsThanks').classList.add('visible');enviarFeedback(n);setTimeout(()=>{payStep3.classList.remove('active');$('payStep4').classList.add('active');setTimeout(()=>{modalPayment.classList.remove('active');resetPay();fullReset();},3000);},1500);}
+function enviarFeedback(stars){console.log('Feedback:',stars,'estrellas — Cliente:',sessionStorage.getItem('clienteNombre'));}
 function resetStars(){$('starsRow').classList.remove('locked');$('starsThanks').classList.remove('visible');document.querySelectorAll('.star-btn').forEach(b=>b.classList.remove('active'));}
-initStars();
+initStars();renderCart();
 
-renderCart();keepFocus();
-
-// ═══ PWA FULLSCREEN ═══
+// ═══ PWA ═══
 function tryFullscreen(){const el=document.documentElement;const rfs=el.requestFullscreen||el.webkitRequestFullscreen||el.mozRequestFullScreen||el.msRequestFullscreen;if(rfs){rfs.call(el).catch(()=>{});}}
 function onFirstInteraction(){if(!window.matchMedia('(display-mode: standalone)').matches){tryFullscreen();}document.removeEventListener('click',onFirstInteraction);document.removeEventListener('touchstart',onFirstInteraction);}
 document.addEventListener('click',onFirstInteraction);document.addEventListener('touchstart',onFirstInteraction);
